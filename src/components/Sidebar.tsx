@@ -10,6 +10,8 @@ import PlusIcon from "./icons/PlusIcon";
 import SettingsIcon from "./icons/SettingsIcon";
 import HelpIcon from "./icons/HelpIcon";
 import CopyIcon from "./icons/CopyIcon";
+import MoonIcon from "./icons/MoonIcon";
+import SunIcon from "./icons/SunIcon";
 
 import "./Sidebar.css";
 
@@ -24,6 +26,8 @@ function Sidebar({
 		showToday,
 		eventGroups,
 		selectedGroupId,
+		theme,
+		isDarkMode,
 		setStartDate,
 		setIncludeWeekends,
 		setShowToday,
@@ -32,6 +36,7 @@ function Sidebar({
 		updateEventGroup,
 		deleteEventGroup,
 		selectEventGroup,
+		toggleTheme,
 		isProUser,
 	} = useStore();
 	const maxGroups = getMaxGroups(isProUser);
@@ -115,14 +120,14 @@ function Sidebar({
 					onClick={() => setShowHelpModal(true)}
 					aria-label="Show instructions"
 				>
-					<HelpIcon color="#000" /> Help
+					<HelpIcon color={isDarkMode ? "#e0e0e0" : "#000"} /> Help
 				</button>
 				<button
 					className="footer-button"
 					onClick={handleCopyUrl}
 					aria-label="Copy URL to clipboard"
 				>
-					<CopyIcon color="#000" /> Copy URL
+					<CopyIcon color={isDarkMode ? "#e0e0e0" : "#000"} /> Copy URL
 				</button>
 			</div>
 		);
@@ -190,7 +195,7 @@ function Sidebar({
 										className="save-button"
 										aria-label="Save group name"
 									>
-										<SaveIcon color="#000" />
+										<SaveIcon color={isDarkMode ? "#e0e0e0" : "#000"} />
 									</button>
 									<button
 										onClick={(e) => {
@@ -200,7 +205,7 @@ function Sidebar({
 										className="cancel-button"
 										aria-label="Cancel editing"
 									>
-										<XIcon color="#000" />
+										<XIcon color={isDarkMode ? "#e0e0e0" : "#000"} />
 									</button>
 								</div>
 							</>
@@ -217,7 +222,7 @@ function Sidebar({
 										className="edit-button"
 										aria-label={`Edit ${group.name}`}
 									>
-										<PencilIcon color="#000" />
+										<PencilIcon color={isDarkMode ? "#e0e0e0" : "#000"} />
 									</button>
 									<button
 										onClick={(e) => {
@@ -228,7 +233,7 @@ function Sidebar({
 										className="delete-button"
 										aria-label={`Delete ${group.name}`}
 									>
-										<TrashIcon color="#000" />
+										<TrashIcon color={isDarkMode ? "#e0e0e0" : "#000"} />
 									</button>
 								</div>
 							</>
@@ -277,6 +282,23 @@ function Sidebar({
 						checked={showToday}
 						onChange={(e) => setShowToday(e.target.checked)}
 					/>
+				</div>
+				<div className="setting-item">
+					<label htmlFor="theme-toggle">Theme:</label>
+					<button
+						id="theme-toggle"
+						className="theme-toggle-button"
+						onClick={toggleTheme}
+						aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode`}
+						title={`Currently ${theme} theme. Click to toggle.`}
+					>
+						{isDarkMode ? (
+							<SunIcon color="var(--sidebar-text)" height={18} />
+						) : (
+							<MoonIcon color="var(--sidebar-text)" height={18} />
+						)}
+						{theme === "system" ? "Auto" : theme === "dark" ? "Dark" : "Light"}
+					</button>
 				</div>
 			</>
 

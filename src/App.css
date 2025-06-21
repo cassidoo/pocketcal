@@ -15,7 +15,8 @@
 	height: 100vh;
 	width: 100%;
 	position: relative;
-	background-color: #f9f9f9;
+	background-color: var(--bg-color);
+	transition: background-color 0.3s ease;
 }
 
 /* Responsive layout */
@@ -37,11 +38,12 @@
 	z-index: 200;
 	padding: 8px 8px 4px;
 	border-radius: 50%;
-	background: #f9f9f9;
-	border: 1px solid #ccc;
+	background: var(--sidebar-bg);
+	border: 1px solid var(--border-color-dark);
 	cursor: pointer;
 	display: none;
-	transition: transform 0.3s ease;
+	transition: transform 0.3s ease, background-color 0.3s ease,
+		border-color 0.3s ease;
 }
 
 .sidebar-hidden .sidebar-toggle {
