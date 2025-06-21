@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { useStore } from "./store";
+import { useTheme } from "./hooks/useTheme";
 import Sidebar from "./components/Sidebar";
 import Calendar from "./components/Calendar";
 import ChevronIcon from "./components/icons/ChevronIcon";
@@ -8,6 +9,7 @@ import HelpModal from "./components/HelpModal";
 import LicenseModal from "./components/LicenseModal";
 
 function App() {
+	useTheme();
 	const [isSidebarHidden, setIsSidebarHidden] = useState(false);
 	const [showLicenseModal, setShowLicenseModal] = useState(false);
 	const getAppStateFromUrl = useStore((state) => state.getAppStateFromUrl);
@@ -16,6 +18,7 @@ function App() {
 	const setShowHelpModal = useStore((state) => state.setShowHelpModal);
 	const validateLicenseKey = useStore((state) => state.validateLicenseKey);
 	const licenseKey = useStore((state) => state.licenseKey);
+	const isDarkMode = useStore((state) => state.isDarkMode);
 
 	// Select individual state pieces needed for the URL
 	const startDate = useStore((state) => state.startDate);
@@ -77,7 +80,7 @@ function App() {
 				aria-label={isSidebarHidden ? "Show sidebar" : "Hide sidebar"}
 				aria-expanded={!isSidebarHidden}
 			>
-				<ChevronIcon color="black" />
+				<ChevronIcon color={isDarkMode ? "#e0e0e0" : "#000"} />
 			</button>
 			<Sidebar setShowLicenseModal={setShowLicenseModal} />
 			<Calendar />

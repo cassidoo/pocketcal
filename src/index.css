@@ -7,6 +7,38 @@
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+
+	/* Light theme colors */
+	--bg-color: #ffffff;
+	--text-color: #213547;
+	--sidebar-bg: #f9f9f9;
+	--sidebar-text: #333;
+	--border-color: #eee;
+	--border-color-dark: #ccc;
+	--border-color-light: #ddd;
+	--button-bg: #f9f9f9;
+	--button-text: #000;
+	--input-bg: #fff;
+	--input-text: #000;
+	--hover-bg: #f0f0f0;
+	--shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+:root.dark {
+	/* Dark theme colors */
+	--bg-color: #1a1a1a;
+	--text-color: #e0e0e0;
+	--sidebar-bg: #2a2a2a;
+	--sidebar-text: #e0e0e0;
+	--border-color: #404040;
+	--border-color-dark: #555;
+	--border-color-light: #505050;
+	--button-bg: #3a3a3a;
+	--button-text: #e0e0e0;
+	--input-bg: #2a2a2a;
+	--input-text: #e0e0e0;
+	--hover-bg: #3a3a3a;
+	--shadow-color: rgba(255, 255, 255, 0.1);
 }
 
 a {
@@ -25,6 +57,9 @@ body {
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 button {
@@ -34,9 +69,10 @@ button {
 	font-size: 1em;
 	font-weight: 500;
 	font-family: inherit;
-	background-color: #1a1a1a;
+	background-color: var(--button-bg);
+	color: var(--button-text);
 	cursor: pointer;
-	transition: border-color 0.25s;
+	transition: border-color 0.25s, background-color 0.3s ease, color 0.3s ease;
 }
 button:focus,
 button:focus-visible {
@@ -44,15 +80,4 @@ button:focus-visible {
 	outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: light) {
-	:root {
-		color: #213547;
-		background-color: #ffffff;
-	}
-	a:hover {
-		color: #747bff;
-	}
-	button {
-		background-color: #f9f9f9;
-	}
-}
+/* Remove the media queries since we're handling theme manually */
