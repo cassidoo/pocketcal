@@ -33,6 +33,8 @@ function Sidebar({
 		deleteEventGroup,
 		selectEventGroup,
 		isProUser,
+		firstDayOfWeek,
+		setFirstDayOfWeek,
 	} = useStore();
 	const maxGroups = getMaxGroups(isProUser);
 	const [newEventName, setNewEventName] = useState("");
@@ -259,6 +261,17 @@ function Sidebar({
 						value={format(startDate, "yyyy-MM")}
 						onChange={handleStartDateChange}
 					/>
+				</div>
+				<div className="setting-item">
+					<label htmlFor="first-day-of-week">Start Week:</label>
+					<select
+						id="first-day-of-week"
+						value={firstDayOfWeek}
+						onChange={(e) => setFirstDayOfWeek(Number(e.target.value) as 0 | 1)}
+					>
+						<option value={0}>Sunday</option>
+						<option value={1}>Monday</option>
+					</select>
 				</div>
 				<div className="setting-item">
 					<label htmlFor="include-weekends">Include Weekends:</label>
