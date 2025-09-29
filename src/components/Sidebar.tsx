@@ -12,6 +12,7 @@ import HelpIcon from "./icons/HelpIcon";
 import CopyIcon from "./icons/CopyIcon";
 
 import "./Sidebar.css";
+import ImportGoogleModal from "./ImportGoogleModal";
 
 function Sidebar({
 	setShowLicenseModal,
@@ -31,12 +32,14 @@ function Sidebar({
 		addEventGroup,
 		updateEventGroup,
 		deleteEventGroup,
+		generateShareableUrl,
 		selectEventGroup,
 		isProUser,
 	} = useStore();
 	const maxGroups = getMaxGroups(isProUser);
 	const [newEventName, setNewEventName] = useState("");
 	const [editingGroup, setEditingGroup] = useState<EventGroup | null>(null);
+	const [showImportModal, setShowImportModal] = useState(false);
 
 	// Add effect to select the first group if none is selected
 	useEffect(() => {
@@ -92,7 +95,6 @@ function Sidebar({
 				setStartDate(newDate);
 			}
 		} catch (error) {
-			console.error("Invalid date format", error);
 		}
 	};
 
@@ -104,7 +106,15 @@ function Sidebar({
 					onClick={() => setShowLicenseModal(true)}
 					aria-label="Show license modal"
 				>
-					{isProUser ? "Thanks for going Pro!" : "Go Pro"}
+					Go Pro
+				</button>
+				<button
+					className="footer-button"
+					onClick={() => {}}
+					aria-label="Name calendar (stub)"
+					title="Name Calendar (coming soon)"
+				>
+					Name Calendar
 				</button>
 			</div>
 		);
@@ -120,9 +130,9 @@ function Sidebar({
 				<button
 					className="footer-button"
 					onClick={handleCopyUrl}
-					aria-label="Copy URL to clipboard"
+					aria-label="Share Link to clipboard"
 				>
-					<CopyIcon color="#000" /> Copy URL
+					<CopyIcon color="#000" /> Share Link
 				</button>
 			</div>
 		);
@@ -247,6 +257,17 @@ function Sidebar({
 				</button>
 			)}
 
+			{/* Import from Google Calendar (no-op for now) */}
+			<button
+				className="add-group-button"
+				onClick={() => setShowImportModal(true)}
+				disabled={!!editingGroup}
+				aria-label="Import group from Google Calendar"
+				title="Import group from Google Calendar (coming soon)"
+			>
+				<PlusIcon height={18} /> Import group from Google Calendar
+			</button>
+
 			<>
 				<h3>
 					<SettingsIcon height={20} /> Settings
@@ -281,6 +302,9 @@ function Sidebar({
 			</>
 
 			<div className="sidebar-footer">{footerGroups()}</div>
+			{showImportModal && (
+				<ImportGoogleModal onClose={() => setShowImportModal(false)} />
+			)}
 		</div>
 	);
 }

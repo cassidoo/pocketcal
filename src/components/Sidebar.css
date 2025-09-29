@@ -263,3 +263,8 @@ input.group-name-input {
 .footer-button:active {
 	background-color: #d0d0d0;
 }
+
+/* Hide the 'Name Calendar' stub button during development present */
+.sidebar .footer-button[aria-label="Name calendar (stub)"] {
+	display: none !important;
+}

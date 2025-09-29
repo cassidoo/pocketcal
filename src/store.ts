@@ -36,6 +36,8 @@ export interface DateRange {
 	end: string;
 }
 
+// This is the 'calendar' of related events.
+// Never stored to backend, All data encoded in the URL
 export interface EventGroup {
 	id: string;
 	name: string;
