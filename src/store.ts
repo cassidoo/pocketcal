@@ -47,6 +47,7 @@ interface AppState {
 	startDate: Date;
 	includeWeekends: boolean;
 	showToday: boolean;
+	weekStartMonday: boolean; // UI: Week starts on Monday (passive field)
 	eventGroups: EventGroup[];
 	selectedGroupId: string | null;
 	showHelpModal: boolean;
@@ -55,6 +56,7 @@ interface AppState {
 	setStartDate: (date: Date) => void;
 	setIncludeWeekends: (include: boolean) => void;
 	setShowToday: (show: boolean) => void;
+	setWeekStartMonday: (monday: boolean) => void;
 	setShowHelpModal: (show: boolean) => void;
 	setLicenseKey: (key: string | null) => void;
 	validateLicenseKey: (key: string) => Promise<boolean>;
@@ -90,6 +92,7 @@ const getDefaultState = () => {
 		startDate: defaultStartDate,
 		includeWeekends: true,
 		showToday: true,
+		weekStartMonday: false,
 		eventGroups: [defaultGroup],
 		selectedGroupId: defaultGroup.id, // Select the first group by default
 	};
@@ -104,6 +107,7 @@ export const useStore = create<AppState>((set, get) => ({
 	setStartDate: (date) => set({ startDate: startOfMonth(date) }),
 	setIncludeWeekends: (include) => set({ includeWeekends: include }),
 	setShowToday: (show) => set({ showToday: show }),
+	setWeekStartMonday: (show) => set({ weekStartMonday: show }),
 	setShowHelpModal: (show) => set({ showHelpModal: show }),
 
 	setLicenseKey: (key) => {

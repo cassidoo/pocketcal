@@ -22,11 +22,13 @@ function Sidebar({
 		startDate,
 		includeWeekends,
 		showToday,
+		weekStartMonday,
 		eventGroups,
 		selectedGroupId,
 		setStartDate,
 		setIncludeWeekends,
 		setShowToday,
+		setWeekStartMonday,
 		setShowHelpModal,
 		addEventGroup,
 		updateEventGroup,
@@ -37,6 +39,7 @@ function Sidebar({
 	const maxGroups = getMaxGroups(isProUser);
 	const [newEventName, setNewEventName] = useState("");
 	const [editingGroup, setEditingGroup] = useState<EventGroup | null>(null);
+	const [settingsOpen, setSettingsOpen] = useState(true);
 
 	// Add effect to select the first group if none is selected
 	useEffect(() => {
@@ -247,10 +250,21 @@ function Sidebar({
 				</button>
 			)}
 
-			<>
-				<h3>
+			<h3 className="settings-header" style={{ display: "flex", alignItems: "center" }}>
+				<span>
 					<SettingsIcon height={20} /> Settings
-				</h3>
+				</span>
+				<button
+					className="settings-toggle-button"
+					onClick={() => setSettingsOpen((v) => !v)}
+					aria-expanded={settingsOpen}
+					aria-controls="settings-content"
+                    aria-label={settingsOpen ? "Hide settings" : "Show settings"}
+				>
+					{settingsOpen ? "▲" : "▼"}
+				</button>
+			</h3>
+			<div id="settings-content" hidden={!settingsOpen}>
 				<div className="setting-item">
 					<label htmlFor="start-date">Start Month:</label>
 					<input
@@ -278,7 +292,17 @@ function Sidebar({
 						onChange={(e) => setShowToday(e.target.checked)}
 					/>
 				</div>
-			</>
+				<div className="setting-item">
+					<label htmlFor="week-monday">Week starts on Monday:</label>
+					<input
+						type="checkbox"
+						id="week-monday"
+						checked={weekStartMonday}
+						onChange={(e) => setWeekStartMonday(e.target.checked)}
+						title="UI-only setting for now"
+					/>
+				</div>
+			</div>
 
 			<div className="sidebar-footer">{footerGroups()}</div>
 		</div>

@@ -1,5 +1,5 @@
 .sidebar {
-	min-width: 324px;
+	min-width: 348px;
 	padding: 16px;
 	display: flex;
 	flex-direction: column;
@@ -262,4 +262,20 @@ input.group-name-input {
 
 .footer-button:active {
 	background-color: #d0d0d0;
+}
+
+/* Small chevron button for Settings fold/unfold */
+.settings-toggle-button {
+	margin-left: auto; /* push to right within h3 */
+	padding: 2px 6px;
+	font-size: 12px;
+	line-height: 1;
+	background: transparent;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.settings-toggle-button:hover {
+	background-color: #f0f0f0;
 }

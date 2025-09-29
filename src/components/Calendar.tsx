@@ -29,6 +29,7 @@ const Calendar: React.FC = () => {
 		startDate,
 		includeWeekends,
 		showToday,
+		weekStartMonday,
 		eventGroups,
 		selectedGroupId,
 		addDateRange,
@@ -257,11 +258,25 @@ const Calendar: React.FC = () => {
 	const getMonthYearKey = (date: Date) => `${getYear(date)}-${getMonth(date)}`;
 
 	const adjustPaddingForWeekdays = (dayOfWeek: number): number => {
+		// Normalize day index based on week start
+		// date-fns getDay: 0=Sun..6=Sat (or 0=Mon..6=Sun for monday-first)
+		const dayOfWeekIndex = weekStartMonday ? (dayOfWeek + 6) % 7 : dayOfWeek; 
+
 		if (!includeWeekends) {
-			if (dayOfWeek === 0) return 0;
-			return dayOfWeek - 1;
+			// Map adjusted (0..6) to 0..4 for weekdays grid
+			// For Sunday-first (adjusted=0..6 => Sun..Sat), weekdays indices are 1..5
+			// For Monday-first (adjusted=0..6 => Mon..Sun), weekdays indices are 0..4
+			if (weekStartMonday) {
+				// Mon=0 -> 0, Tue=1 ->1, Wed=2 ->2, Thu=3 ->3, Fri=4 ->4
+				// Sat(5), Sun(6) are weekends and not part of the 5-col grid
+				return Math.min(dayOfWeekIndex, 4);
+			} else {
+				// Sun=0 -> 0 (no padding), Mon=1 ->0, Tue=2 ->1, Wed=3 ->2, Thu=4 ->3, Fri=5 ->4
+				// Sat(6) weekend hidden; align as if Fri -> 4
+				return dayOfWeekIndex === 0 ? 0 : Math.min(dayOfWeekIndex - 1, 4);
+			}
 		}
-		return dayOfWeek;
+		return dayOfWeekIndex;
 	};
 
 	const groupedDates = calendarDates.reduce((acc, date) => {
@@ -338,6 +353,7 @@ const Calendar: React.FC = () => {
 			tabIndex={0}
 			role="application"
 			aria-label="Calendar grid. Use arrow keys to navigate dates and space or enter to select."
+			data-week-start-monday={weekStartMonday}
 		>
 			{Object.entries(groupedDates).map(([monthYearKey, datesInMonth]) => {
 				const [year, monthIndex] = monthYearKey.split("-").map(Number);
@@ -354,21 +370,23 @@ const Calendar: React.FC = () => {
 							{format(monthDate, "MMMM yyyy")}
 						</h3>
 						<div
-							className={`calendar-grid ${
+							className={`calendar-grid ${weekStartMonday ? "monday-first" : ""} ${
 								!includeWeekends ? "weekends-hidden" : ""
 							}`}
 							role="grid"
 							aria-labelledby={`month-${monthYearKey}`}
 						>
-							{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-								.filter(
-									(_, index) => includeWeekends || (index > 0 && index < 6)
-								)
-								.map((day) => (
-									<div key={day} className="weekday-header" role="columnheader">
-										{day}
-									</div>
-								))}
+							{(weekStartMonday
+								? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+								: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
+							.filter((_, index) =>
+								includeWeekends ? true : weekStartMonday ? index < 5 : index > 0 && index < 6
+							)
+							.map((day) => (
+								<div key={day} className="weekday-header" role="columnheader">
+									{day}
+								</div>
+							))}
 
 							{paddingDays.map((_, index) => (
 								<div
