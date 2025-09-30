@@ -18,9 +18,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
 				>
 					<XIcon color="#000" />
 				</button>
-				<h2>
-					Pocket<span>Cal</span> Instructions
-				</h2>
+				<p> A fast, simple, local-first calendar. The data is encoded in the URL, 
+				so if you save or share the URL, it a copy of the calendar that you share.
+				</p>
 				<div className="instructions-content">
 					<h3>Features</h3>
 					<ul>
@@ -47,9 +47,9 @@ const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
 					</ul>
 					<h3>About</h3>
 					<p className="footer">
-						PocketCal is built by <a href="https://cassidoo.co/">cassidoo</a>{" "}
-						and is open source on{" "}
-						<a href="https://github.com/cassidoo/pocketcal">GitHub</a>.
+						PocketCal is built by <a href="https://cassidoo.co/">cassidoo</a>{" "}, 
+						expanded by <a href="https://farmckon.com/">FarMcKon</a>. It is open source on
+						<a href="https://github.com/cassidoo/pocketcal"> GitHub</a>.
 					</p>
 				</div>
 			</div>

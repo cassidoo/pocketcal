@@ -45,6 +45,7 @@ export interface EventGroup {
 	ranges: DateRange[];
 }
 
+//also defines the JSON layout and format of data stored in URL
 interface AppState {
 	startDate: Date;
 	includeWeekends: boolean;
@@ -86,6 +87,7 @@ const createDefaultEventGroup = (index = 0): EventGroup => ({
 });
 
 // Create a function to get the default state
+// for the first time you load the app
 const getDefaultState = () => {
 	const defaultGroup = createDefaultEventGroup();
 	return {
@@ -243,22 +245,25 @@ export const useStore = create<AppState>((set, get) => ({
 			),
 		})),
 
+	// Unzip data encoeded in URL to expand back to calendar vieww
 	getAppStateFromUrl: () => {
 		try {
-			const hash = window.location.hash.substring(1);
-			if (hash) {
+			const compressedData = window.location.hash.substring(1);
+			if (compressedData) {
 				let decodedState;
 				try {
-					const decompressed = LZString.decompressFromEncodedURIComponent(hash);
+					const decompressed = LZString.decompressFromEncodedURIComponent(compressedData);
 					if (decompressed) {
 						decodedState = JSON.parse(decompressed);
 					} else {
-						decodedState = JSON.parse(atob(hash));
+						//try to 'ascii to binary' before decompessing
+						decodedState = JSON.parse(atob(compressedData));
 					}
 				} catch {
-					decodedState = JSON.parse(atob(hash));
+					//try to 'ascii to binary' before decompessing
+					decodedState = JSON.parse(atob(compressedData));
 				}
-
+				//assuming we know the JSON structure, decode it 
 				if (decodedState.startDate || decodedState.s) {
 					if (decodedState.s) {
 						const startDate = startOfMonth(parseISO(decodedState.s));
@@ -347,10 +352,12 @@ export const useStore = create<AppState>((set, get) => ({
 		}
 	},
 
+	// generates shareable URL, encoding the whole state of the cute little app
 	generateShareableUrl: () => {
 		const state = get();
 		const startDate = state.startDate;
 
+		// data structure for all data we are compressing into the URL compressed blog
 		const compressedState: { s: string; w?: boolean; t?: boolean; g?: any[] } =
 			{
 				s: formatISO(startDate, { representation: "date" }),
@@ -381,6 +388,9 @@ export const useStore = create<AppState>((set, get) => ({
 		const compressed = LZString.compressToEncodedURIComponent(
 			JSON.stringify(compressedState)
 		);
+		// called recursively on save and on load ? 
+		// so we need to add the path to the URL ? 
+		//return `${window.location.origin}${window.location.pathname}/in-url/#${compressed}`;
 		return `${window.location.origin}${window.location.pathname}#${compressed}`;
 	},
 }));

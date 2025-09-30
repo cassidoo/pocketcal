@@ -40,6 +40,7 @@ function Sidebar({
 	const [newEventName, setNewEventName] = useState("");
 	const [editingGroup, setEditingGroup] = useState<EventGroup | null>(null);
 	const [showImportModal, setShowImportModal] = useState(false);
+	const [dataMode, setDataMode] = useState<"url" | "server">("url");
 
 	// Add effect to select the first group if none is selected
 	useEffect(() => {
@@ -108,14 +109,6 @@ function Sidebar({
 				>
 					Go Pro
 				</button>
-				<button
-					className="footer-button"
-					onClick={() => {}}
-					aria-label="Name calendar (stub)"
-					title="Name Calendar (coming soon)"
-				>
-					Name Calendar
-				</button>
 			</div>
 		);
 		let helpAndCopyButtons = (
@@ -144,7 +137,18 @@ function Sidebar({
 
 	return (
 		<div className="sidebar">
-			<h1 className="logo">
+			<h1
+				className="logo"
+				onClick={() => setShowHelpModal(true)}
+				role="button"
+				tabIndex={0}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						setShowHelpModal(true);
+					}
+				}}
+			>
 				Pocket<span className="logo-cal">Cal</span>{" "}
 				{isProUser && <span className="pro-badge">Pro</span>}
 			</h1>
@@ -298,6 +302,20 @@ function Sidebar({
 						checked={showToday}
 						onChange={(e) => setShowToday(e.target.checked)}
 					/>
+				</div>
+				<div className="setting-item">
+					<label htmlFor="data-mode">Storage:</label>
+					<select
+						id="data-mode"
+						value={dataMode}
+						onChange={(e) => setDataMode(e.target.value as "url" | "server")}
+						aria-label="Data storage mode"
+					>
+						<option value="url">Data In URL</option>
+						<option value="server" disabled>
+							Data on Server (coming soon)
+						</option>
+					</select>
 				</div>
 			</>
 
