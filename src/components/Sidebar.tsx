@@ -12,6 +12,7 @@ import HelpIcon from "./icons/HelpIcon";
 import CopyIcon from "./icons/CopyIcon";
 
 import "./Sidebar.css";
+import ImportGoogleModal from "./ImportGoogleModal";
 
 function Sidebar({
 	setShowLicenseModal,
@@ -31,12 +32,15 @@ function Sidebar({
 		addEventGroup,
 		updateEventGroup,
 		deleteEventGroup,
+		generateShareableUrl,
 		selectEventGroup,
 		isProUser,
 	} = useStore();
 	const maxGroups = getMaxGroups(isProUser);
 	const [newEventName, setNewEventName] = useState("");
 	const [editingGroup, setEditingGroup] = useState<EventGroup | null>(null);
+	const [showImportModal, setShowImportModal] = useState(false);
+	const [dataMode, setDataMode] = useState<"url" | "server">("url");
 
 	// Add effect to select the first group if none is selected
 	useEffect(() => {
@@ -92,7 +96,6 @@ function Sidebar({
 				setStartDate(newDate);
 			}
 		} catch (error) {
-			console.error("Invalid date format", error);
 		}
 	};
 
@@ -104,7 +107,7 @@ function Sidebar({
 					onClick={() => setShowLicenseModal(true)}
 					aria-label="Show license modal"
 				>
-					{isProUser ? "Thanks for going Pro!" : "Go Pro"}
+					Go Pro
 				</button>
 			</div>
 		);
@@ -120,9 +123,9 @@ function Sidebar({
 				<button
 					className="footer-button"
 					onClick={handleCopyUrl}
-					aria-label="Copy URL to clipboard"
+					aria-label="Share Link to clipboard"
 				>
-					<CopyIcon color="#000" /> Copy URL
+					<CopyIcon color="#000" /> Share Link
 				</button>
 			</div>
 		);
@@ -134,7 +137,18 @@ function Sidebar({
 
 	return (
 		<div className="sidebar">
-			<h1 className="logo">
+			<h1
+				className="logo"
+				onClick={() => setShowHelpModal(true)}
+				role="button"
+				tabIndex={0}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						setShowHelpModal(true);
+					}
+				}}
+			>
 				Pocket<span className="logo-cal">Cal</span>{" "}
 				{isProUser && <span className="pro-badge">Pro</span>}
 			</h1>
@@ -247,6 +261,17 @@ function Sidebar({
 				</button>
 			)}
 
+			{/* Import from Google Calendar (no-op for now) */}
+			<button
+				className="add-group-button"
+				onClick={() => setShowImportModal(true)}
+				disabled={!!editingGroup}
+				aria-label="Import group from Google Calendar"
+				title="Import group from Google Calendar (coming soon)"
+			>
+				<PlusIcon height={18} /> Import group from Google Calendar
+			</button>
+
 			<>
 				<h3>
 					<SettingsIcon height={20} /> Settings
@@ -278,9 +303,26 @@ function Sidebar({
 						onChange={(e) => setShowToday(e.target.checked)}
 					/>
 				</div>
+				<div className="setting-item">
+					<label htmlFor="data-mode">Storage:</label>
+					<select
+						id="data-mode"
+						value={dataMode}
+						onChange={(e) => setDataMode(e.target.value as "url" | "server")}
+						aria-label="Data storage mode"
+					>
+						<option value="url">Data In URL</option>
+						<option value="server" disabled>
+							Data on Server (coming soon)
+						</option>
+					</select>
+				</div>
 			</>
 
 			<div className="sidebar-footer">{footerGroups()}</div>
+			{showImportModal && (
+				<ImportGoogleModal onClose={() => setShowImportModal(false)} />
+			)}
 		</div>
 	);
 }

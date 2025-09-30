@@ -158,7 +158,7 @@ h2 {
 .add-group-button {
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	gap: 5px;
 	padding: 8px 12px;
 	width: 100%;
@@ -262,4 +262,9 @@ input.group-name-input {
 
 .footer-button:active {
 	background-color: #d0d0d0;
+}
+
+/* Hide the 'Name Calendar' stub button during development present */
+.sidebar .footer-button[aria-label="Name calendar (stub)"] {
+	display: none !important;
 }
