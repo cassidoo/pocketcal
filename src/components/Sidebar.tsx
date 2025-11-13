@@ -39,6 +39,12 @@ function Sidebar({
 	const maxGroups = getMaxGroups(isProUser);
 	const [newEventName, setNewEventName] = useState("");
 	const [editingGroup, setEditingGroup] = useState<EventGroup | null>(null);
+	const [rawStartDate, setRawStartDate] = useState<string>(format(startDate, "yyyy-MM"))
+
+	const isValidDate = (rawDate: string): boolean => {
+		const [year, month] = rawDate.split("-");
+		return year.length === 4 && typeof month !== "undefined" && month.length === 2;
+	}
 
 	// Add effect to select the first group if none is selected
 	useEffect(() => {
@@ -87,9 +93,10 @@ function Sidebar({
 	};
 
 	const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setRawStartDate(e.target.value)
 		try {
-			const [year, month] = e.target.value.split("-").map(Number);
-			if (year && month) {
+			if (isValidDate(e.target.value)) {
+				const [year, month] = e.target.value.split('-').map(Number)
 				const newDate = new Date(year, month - 1, 1);
 				setStartDate(newDate);
 			}
@@ -258,7 +265,7 @@ function Sidebar({
 					<input
 						type="month"
 						id="start-date"
-						value={format(startDate, "yyyy-MM")}
+						value={isValidDate(rawStartDate) ? format(startDate, "yyyy-MM") : rawStartDate}
 						onChange={handleStartDateChange}
 					/>
 				</div>
