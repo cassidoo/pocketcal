@@ -263,7 +263,7 @@ function Sidebar({
 					/>
 				</div>
 				<div className="setting-item">
-					<label htmlFor="first-day-of-week">Start Week:</label>
+					<label htmlFor="first-day-of-week">Start the Week on:</label>
 					<select
 						id="first-day-of-week"
 						value={firstDayOfWeek}
