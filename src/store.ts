@@ -52,6 +52,8 @@ interface AppState {
 	showHelpModal: boolean;
 	licenseKey: string | null;
 	isProUser: boolean;
+	firstDayOfWeek: 0 | 1; // 0 = sunday, 1 = monday
+	setFirstDayOfWeek: (day: 0 | 1) => void;
 	setStartDate: (date: Date) => void;
 	setIncludeWeekends: (include: boolean) => void;
 	setShowToday: (show: boolean) => void;
@@ -92,6 +94,7 @@ const getDefaultState = () => {
 		showToday: true,
 		eventGroups: [defaultGroup],
 		selectedGroupId: defaultGroup.id, // Select the first group by default
+		firstDayOfWeek: 0 as 0 | 1, // Default to Sunday, explicitly typed
 	};
 };
 
@@ -100,6 +103,7 @@ export const useStore = create<AppState>((set, get) => ({
 	showHelpModal: false,
 	licenseKey: localStorage.getItem("pocketcal_license") || null,
 	isProUser: false,
+	setFirstDayOfWeek: (day: 0 | 1) => set({ firstDayOfWeek: day }),
 
 	setStartDate: (date) => set({ startDate: startOfMonth(date) }),
 	setIncludeWeekends: (include) => set({ includeWeekends: include }),
@@ -318,6 +322,7 @@ export const useStore = create<AppState>((set, get) => ({
 									? eventGroups
 									: [createDefaultEventGroup()],
 							selectedGroupId: eventGroups[0]?.id ?? null,
+							firstDayOfWeek: decodedState.f === 1 ? 1 : 0,
 						});
 					} else {
 						const eventGroups = decodedState.eventGroups ?? [
@@ -349,7 +354,7 @@ export const useStore = create<AppState>((set, get) => ({
 		const state = get();
 		const startDate = state.startDate;
 
-		const compressedState: { s: string; w?: boolean; t?: boolean; g?: any[] } =
+		const compressedState: { s: string; w?: boolean; t?: boolean; g?: any[]; f?: 0 | 1 } =
 			{
 				s: formatISO(startDate, { representation: "date" }),
 				w: state.includeWeekends ? undefined : false,
@@ -369,12 +374,14 @@ export const useStore = create<AppState>((set, get) => ({
 					);
 					return compressedGroup;
 				}),
+				f: state.firstDayOfWeek === 0 ? undefined : state.firstDayOfWeek,
 			};
 
 		// Remove default values
 		if (compressedState.w === undefined) delete compressedState.w;
 		if (compressedState.t === undefined) delete compressedState.t;
 		if (compressedState.g?.length === 0) delete compressedState.g;
+		if (compressedState.f === undefined) delete compressedState.f;
 
 		const compressed = LZString.compressToEncodedURIComponent(
 			JSON.stringify(compressedState)

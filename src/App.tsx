@@ -22,6 +22,7 @@ function App() {
 	const includeWeekends = useStore((state) => state.includeWeekends);
 	const showToday = useStore((state) => state.showToday);
 	const eventGroups = useStore((state) => state.eventGroups);
+	const firstDayOfWeek = useStore((state) => state.firstDayOfWeek);
 
 	// Load state from URL on initial mount
 	useEffect(() => {
@@ -51,6 +52,7 @@ function App() {
 		includeWeekends,
 		showToday,
 		eventGroups,
+		firstDayOfWeek,
 		generateShareableUrl,
 	]);
 

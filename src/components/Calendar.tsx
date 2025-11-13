@@ -33,6 +33,7 @@ const Calendar: React.FC = () => {
 		selectedGroupId,
 		addDateRange,
 		deleteDateRange,
+		firstDayOfWeek,
 	} = useStore();
 
 	const calendarDates = getCalendarDates(startDate);
@@ -256,12 +257,26 @@ const Calendar: React.FC = () => {
 
 	const getMonthYearKey = (date: Date) => `${getYear(date)}-${getMonth(date)}`;
 
+	// Replace the display of day headers
+	const weekdayLabels = firstDayOfWeek === 1
+		? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+		: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 	const adjustPaddingForWeekdays = (dayOfWeek: number): number => {
-		if (!includeWeekends) {
-			if (dayOfWeek === 0) return 0;
-			return dayOfWeek - 1;
+		if (firstDayOfWeek === 1) {
+			// Monday = 0, ..., Sunday = 6
+			const adjusted = (dayOfWeek + 6) % 7;
+			if (!includeWeekends) {
+				return adjusted < 5 ? adjusted : 0;
+			}
+			return adjusted;
+		} else {
+			if (!includeWeekends) {
+				if (dayOfWeek === 0) return 0;
+				return dayOfWeek - 1;
+			}
+			return dayOfWeek;
 		}
-		return dayOfWeek;
 	};
 
 	const groupedDates = calendarDates.reduce((acc, date) => {
@@ -360,9 +375,9 @@ const Calendar: React.FC = () => {
 							role="grid"
 							aria-labelledby={`month-${monthYearKey}`}
 						>
-							{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+							{weekdayLabels
 								.filter(
-									(_, index) => includeWeekends || (index > 0 && index < 6)
+									(_, index) => includeWeekends || (firstDayOfWeek === 1 ? (index < 5) : (index > 0 && index < 6))
 								)
 								.map((day) => (
 									<div key={day} className="weekday-header" role="columnheader">
