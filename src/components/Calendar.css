@@ -18,10 +18,18 @@
 	}
 }
 
+/* On small screens, minimum is one month per row  */
 @media (max-width: 530px) {
 	.calendar-container {
 		grid-template-columns: repeat(auto-fit, 100%);
 		width: 100%;
+	}
+}
+
+/* On large screens, max out the month grid at 4 x 3 columns/rows (12 months) */
+@media (min-width: 1200px) {
+	.calendar-container {
+		grid-template-columns: repeat(4, minmax(250px, 1fr));
 	}
 }
 
