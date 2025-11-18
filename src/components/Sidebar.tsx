@@ -10,6 +10,7 @@ import PlusIcon from "./icons/PlusIcon";
 import SettingsIcon from "./icons/SettingsIcon";
 import HelpIcon from "./icons/HelpIcon";
 import CopyIcon from "./icons/CopyIcon";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 import "./Sidebar.css";
 
@@ -40,6 +41,7 @@ function Sidebar({
 	const [newEventName, setNewEventName] = useState("");
 	const [editingGroup, setEditingGroup] = useState<EventGroup | null>(null);
 	const [rawStartDate, setRawStartDate] = useState<string>(format(startDate, "yyyy-MM"))
+	const [groupToDelete, setGroupToDelete] = useState<EventGroup | null>(null);
 
 	const isValidDate = (rawDate: string): boolean => {
 		const [year, month] = rawDate.split("-");
@@ -231,7 +233,7 @@ function Sidebar({
 									<button
 										onClick={(e) => {
 											e.stopPropagation();
-											deleteEventGroup(group.id);
+											setGroupToDelete(group);
 										}}
 										disabled={!!editingGroup}
 										className="delete-button"
@@ -301,6 +303,18 @@ function Sidebar({
 			</>
 
 			<div className="sidebar-footer">{footerGroups()}</div>
+			{groupToDelete && (
+				<ConfirmDeleteModal
+					message={`Delete "${groupToDelete.name}" and all its dates?`}
+					confirmLabel="Delete"
+					cancelLabel="Cancel"
+					onConfirm={() => {
+						deleteEventGroup(groupToDelete.id);
+						setGroupToDelete(null);
+					}}
+					onCancel={() => setGroupToDelete(null)}
+				/>
+			)}
 		</div>
 	);
 }
