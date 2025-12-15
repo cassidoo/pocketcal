@@ -4,7 +4,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.7);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -12,13 +12,25 @@
 }
 
 .modal-content {
-	background: white;
+	background: #2a2a2a;
 	border-radius: 8px;
 	padding: 24px;
 	max-width: 500px;
 	max-height: 80vh;
 	overflow-y: auto;
 	position: relative;
+	color: #e0e0e0;
+}
+
+@media (prefers-color-scheme: light) {
+	.modal-overlay {
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+
+	.modal-content {
+		background: white;
+		color: #213547;
+	}
 }
 
 .modal-content a {
@@ -77,15 +89,25 @@ button.btn[disabled] {
 
 input[type="text"] {
 	padding: 8px;
-	border: 1px solid #ccc;
+	border: 1px solid #444;
 	border-radius: 4px;
 	margin-top: 8px;
 	width: 100%;
 	box-sizing: border-box;
+	background-color: #1a1a1a;
+	color: #e0e0e0;
 }
 input[type="text"]:focus {
 	border-color: #8a35de;
 	outline: none;
+}
+
+@media (prefers-color-scheme: light) {
+	input[type="text"] {
+		border: 1px solid #ccc;
+		background-color: #fff;
+		color: #000;
+	}
 }
 
 .error-message {
@@ -114,11 +136,18 @@ p.license-active {
 }
 
 pre.license-key-display {
-	background-color: #f5f5f5;
-	border: 1px solid #ccc;
+	background-color: #1a1a1a;
+	border: 1px solid #444;
 	border-radius: 4px;
 	padding: 8px;
 	overflow-x: auto;
 	font-family: monospace;
 	margin-top: 8px;
+}
+
+@media (prefers-color-scheme: light) {
+	pre.license-key-display {
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+	}
 }
