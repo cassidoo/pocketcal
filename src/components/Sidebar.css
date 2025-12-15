@@ -60,24 +60,8 @@ h2 {
 }
 
 @media (max-width: 768px) {
-	.sidebar {
-		width: 100%;
-		min-width: 0;
-		height: auto;
-		max-height: 50vh;
-		border-right: none;
-		border-bottom: 1px solid #444;
-		position: relative;
-		z-index: 10;
-	}
 	.sidebar h1 {
 		border-bottom: none;
-	}
-}
-
-@media (max-width: 768px) and (prefers-color-scheme: light) {
-	.sidebar {
-		border-bottom: 1px solid #ccc;
 	}
 }
 
@@ -279,7 +263,7 @@ input.group-name-input {
 		height: auto;
 		max-height: 50vh;
 		border-right: none;
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid #444;
 		position: relative;
 		z-index: 10;
 	}
@@ -301,6 +285,12 @@ input.group-name-input {
 
 	input.group-name-input {
 		max-width: 100%;
+	}
+}
+
+@media (max-width: 768px) and (prefers-color-scheme: light) {
+	.sidebar {
+		border-bottom: 1px solid #ccc;
 	}
 }
 
