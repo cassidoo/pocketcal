@@ -5,7 +5,7 @@
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	gap: 10px;
 	align-content: start;
-	background-color: #f9f9f9;
+	background-color: var(--bg-app);
 	overflow-y: auto;
 	height: 100%;
 	box-sizing: border-box;
@@ -26,18 +26,18 @@
 }
 
 .calendar-month {
-	border: 1px solid #eee;
+	border: 1px solid var(--border-color);
 	padding: 8px;
 	border-radius: 6px;
-	background-color: white;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	background-color: var(--bg-card);
+	box-shadow: var(--shadow-sm);
 	min-width: 0;
 }
 
 .calendar-month h3 {
 	text-align: center;
 	margin: 0 0 8px 0;
-	color: #333;
+	color: var(--text-primary);
 	font-size: 0.9em;
 	font-weight: 600;
 }
@@ -46,7 +46,7 @@
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	gap: 1px;
-	background-color: #f5f5f5;
+	background-color: var(--bg-grid);
 	padding: 1px;
 	border-radius: 4px;
 	font-size: 0.8em;
@@ -61,12 +61,12 @@
 	font-weight: 600;
 	font-size: 0.7em;
 	padding: 2px;
-	background-color: #f8f9fa;
-	color: #666;
+	background-color: var(--bg-header);
+	color: var(--text-secondary);
 }
 
 .calendar-day {
-	background-color: #ffffff;
+	background-color: var(--bg-card);
 	border: 1px solid transparent;
 	min-height: 24px;
 	height: 24px;
@@ -81,7 +81,7 @@
 }
 
 .calendar-day:hover {
-	background-color: #f8f9fa;
+	background-color: var(--bg-hover);
 }
 
 .calendar-day.empty {
@@ -94,7 +94,7 @@
 }
 
 .calendar-day.today .day-number {
-	color: #333;
+	color: var(--text-primary);
 	font-weight: bold;
 	border: 2px solid #eb4888;
 	border-radius: 50%;
@@ -108,20 +108,20 @@
 }
 
 .calendar-day:has(.range-indicator).today .day-number {
-	color: #333;
-	background-color: #fff;
+	color: var(--text-primary);
+	background-color: var(--bg-card);
 	border-color: transparent;
 	text-shadow: none;
 }
 
 .calendar-day.dragging {
-	background-color: #e3f2fd;
-	border: 1px dashed #2196f3;
+	background-color: var(--bg-drag);
+	border: 1px dashed var(--border-drag);
 }
 
 .day-number {
 	font-size: 0.9em;
-	color: #333;
+	color: var(--text-primary);
 	width: 20px;
 	height: 20px;
 	display: flex;
@@ -134,7 +134,7 @@
 
 /* When the calendar day has range indicators, make the number white and bold */
 .calendar-day:has(.range-indicator) .day-number {
-	color: white;
+	color: var(--text-inverse);
 	font-weight: bold;
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }

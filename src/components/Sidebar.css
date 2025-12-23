@@ -4,8 +4,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	background-color: #f9f9f9;
-	color: #333;
+	background-color: var(--bg-sidebar);
+	color: var(--text-primary);
 	overflow-y: auto;
 	overflow-x: hidden;
 	transition: max-height 0.3s ease;
@@ -27,7 +27,7 @@
 
 .sidebar h1,
 .sidebar h3 {
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid var(--border-color);
 	padding-bottom: 5px;
 	font-weight: 500;
 }
@@ -37,7 +37,7 @@ h2 {
 }
 
 .logo-cal {
-	color: rgb(138, 53, 222);
+	color: var(--color-accent);
 	font-weight: 700;
 }
 
@@ -52,7 +52,7 @@ h2 {
 		height: auto;
 		max-height: 50vh;
 		border-right: none;
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid var(--border-strong);
 		position: relative;
 		z-index: 10;
 	}
@@ -81,10 +81,10 @@ h2 {
 	display: flex;
 	align-items: center;
 	padding: 8px;
-	border: 1px solid #ddd;
+	border: 1px solid var(--border-color);
 	border-radius: 4px;
 	cursor: pointer;
-	background-color: #fff;
+	background-color: var(--bg-card);
 	gap: 8px;
 	min-height: 30px;
 }
@@ -110,7 +110,7 @@ h2 {
 }
 
 .event-group-item.selected {
-	background: linear-gradient(90deg, #ffffff, rgba(138, 53, 222, 0.05));
+	background: linear-gradient(90deg, var(--bg-card), rgba(138, 53, 222, 0.05));
 	background-size: 120% 120%;
 	animation: gradient-animation 2s ease infinite;
 	box-shadow: 0 0 0 2px rgba(138, 53, 222, 0.25);
@@ -129,7 +129,7 @@ h2 {
 }
 
 .event-group-item:hover {
-	background-color: #f0f0f0;
+	background-color: var(--bg-hover);
 }
 
 .color-indicator {
@@ -138,7 +138,7 @@ h2 {
 	height: 15px;
 	border-radius: 50%;
 	margin-right: 8px;
-	border: 1px solid #ccc;
+	border: 1px solid var(--border-color);
 	flex-shrink: 0;
 }
 
@@ -164,32 +164,32 @@ h2 {
 	width: 100%;
 	box-sizing: border-box;
 	background: transparent;
-	color: #333;
+	color: var(--text-primary);
 	font-size: 0.85em;
 }
 
 .add-group-button:hover {
-	background-color: #f0f0f0;
+	background-color: var(--bg-hover);
 	border-color: transparent;
 	transition: background-color 0.3s ease;
 }
 
 .add-group-button:disabled {
-	background-color: #f0f0f0;
-	color: #ccc;
+	background-color: var(--bg-hover);
+	color: var(--text-secondary);
 	cursor: not-allowed;
 }
 
 input {
-	background-color: #fff;
-	border: 1px solid #ccc;
+	background-color: var(--bg-input);
+	border: 1px solid var(--border-input);
 	border-radius: 4px;
-	color: #000;
+	color: var(--text-primary);
 	font-size: 1em;
 }
 
 input[type="month"]::-webkit-calendar-picker-indicator {
-	filter: brightness(0);
+	filter: invert(var(--calendar-icon-invert));
 }
 
 input.group-name-input {
@@ -206,7 +206,7 @@ input.group-name-input {
 		height: auto;
 		max-height: 50vh;
 		border-right: none;
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid var(--border-color);
 		position: relative;
 		z-index: 10;
 	}
@@ -244,8 +244,8 @@ input.group-name-input {
 .footer-button {
 	flex: 1;
 	padding: 8px 12px;
-	background-color: #f0f0f0;
-	border: 1px solid #ddd;
+	background-color: var(--bg-hover);
+	border: 1px solid var(--border-color);
 	border-radius: 4px;
 	cursor: pointer;
 	font-size: 14px;
@@ -257,9 +257,9 @@ input.group-name-input {
 }
 
 .footer-button:hover {
-	background-color: #e0e0e0;
+	background-color: var(--border-color);
 }
 
 .footer-button:active {
-	background-color: #d0d0d0;
+	background-color: var(--border-strong);
 }
