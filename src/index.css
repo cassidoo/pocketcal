@@ -1,4 +1,33 @@
 :root {
+	/* Light Mode Variables */
+	--bg-app: #f9f9f9;
+	--bg-sidebar: #f9f9f9;
+	--bg-card: #ffffff;
+	--bg-input: #ffffff;
+	--bg-hover: #f0f0f0;
+	--bg-grid: #f5f5f5;
+	--bg-header: #f8f9fa;
+	
+	--text-primary: #213547;
+	--text-secondary: #666666;
+	--text-inverse: #ffffff;
+	
+	--border-color: #eeeeee;
+	--border-strong: #cccccc;
+	--border-input: #cccccc;
+	
+	--border-input: #cccccc;
+	
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+	
+	--calendar-icon-invert: 0;
+	
+	--bg-drag: #e3f2fd;
+	--border-drag: #2196f3;
+	
+	--color-accent: #8a35de; /* Purple */
+
+	/* Common setup */
 	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
@@ -9,9 +38,37 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+:root.dark {
+	/* Dark Mode Variables */
+	--bg-app: #121212;
+	--bg-sidebar: #121212;
+	--bg-card: #1e1e1e;
+	--bg-input: #2a2a2a;
+	--bg-hover: #333333;
+	--bg-grid: #333333;
+	--bg-header: #2a2a2a;
+
+	--text-primary: #e0e0e0;
+	--text-secondary: #a0a0a0;
+	--text-inverse: #ffffff;
+
+	--border-color: #333333;
+	--border-strong: #444444;
+	--border-input: #444444;
+
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+	
+	--calendar-icon-invert: 1;
+	
+	--bg-drag: #1e3a5f; /* Darker blue */
+	--border-drag: #60a5fa; /* Lighter blue border */
+	
+	--color-accent: #a855f7; /* Lighter purple for dark mode */
+}
+
 a {
 	font-weight: 500;
-	color: #646cff;
+	color: #646cff; /* Keep simplified link color or make var if needed */
 	text-decoration: inherit;
 }
 a:hover {
@@ -25,6 +82,9 @@ body {
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--bg-app);
+	color: var(--text-primary);
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 button {
@@ -34,25 +94,16 @@ button {
 	font-size: 1em;
 	font-weight: 500;
 	font-family: inherit;
-	background-color: #1a1a1a;
+	background-color: var(--bg-hover); /* Default button bg */
+	color: var(--text-primary);
 	cursor: pointer;
-	transition: border-color 0.25s;
+	transition: border-color 0.25s, background-color 0.25s;
+}
+button:hover {
+	border-color: #646cff;
 }
 button:focus,
 button:focus-visible {
 	outline: 4px auto rgba(138, 53, 222, 0.3);
 	outline-offset: 2px;
-}
-
-@media (prefers-color-scheme: light) {
-	:root {
-		color: #213547;
-		background-color: #ffffff;
-	}
-	a:hover {
-		color: #747bff;
-	}
-	button {
-		background-color: #f9f9f9;
-	}
 }
