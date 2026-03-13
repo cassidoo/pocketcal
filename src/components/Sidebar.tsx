@@ -10,6 +10,8 @@ import PlusIcon from "./icons/PlusIcon";
 import SettingsIcon from "./icons/SettingsIcon";
 import HelpIcon from "./icons/HelpIcon";
 import CopyIcon from "./icons/CopyIcon";
+import DownloadIcon from "./icons/DownloadIcon";
+import { generateIcsContent, downloadIcsFile } from "../utils/icsExport";
 
 import "./Sidebar.css";
 
@@ -92,6 +94,13 @@ function Sidebar({
 		navigator.clipboard.writeText(window.location.href);
 	};
 
+	const handleExportIcs = () => {
+		const content = generateIcsContent(eventGroups);
+		downloadIcsFile(content);
+	};
+
+	const hasAnyRanges = eventGroups.some((g) => g.ranges.length > 0);
+
 	const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setRawStartDate(e.target.value)
 		try {
@@ -106,7 +115,19 @@ function Sidebar({
 	};
 
 	const footerGroups = () => {
-		let proButton = (
+		const exportButton = (
+			<div className="sidebar-footer-buttons">
+				<button
+					className="footer-button"
+					onClick={handleExportIcs}
+					disabled={!hasAnyRanges}
+					aria-label="Export to .ics file"
+				>
+					<DownloadIcon color="#000" /> Export to .ics
+				</button>
+			</div>
+		);
+		const proButton = (
 			<div className="sidebar-footer-buttons">
 				<button
 					className="footer-button"
@@ -117,7 +138,7 @@ function Sidebar({
 				</button>
 			</div>
 		);
-		let helpAndCopyButtons = (
+		const helpAndCopyButtons = (
 			<div className="sidebar-footer-buttons">
 				<button
 					className="footer-button"
@@ -137,8 +158,8 @@ function Sidebar({
 		);
 
 		return isProUser
-			? [helpAndCopyButtons, proButton]
-			: [proButton, helpAndCopyButtons];
+			? [helpAndCopyButtons, exportButton, proButton]
+			: [exportButton, proButton, helpAndCopyButtons];
 	};
 
 	return (
