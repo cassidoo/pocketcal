@@ -76,7 +76,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ onClose }) => {
 					onClick={onClose}
 					aria-label="Close license modal"
 				>
-					<XIcon color="#000" />
+					<XIcon color="var(--icon-color)" />
 				</button>
 				<h2>
 					Pocket<span className="logo-cal">Cal</span>{" "}
@@ -87,7 +87,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ onClose }) => {
 				{isProUser ? (
 					<div className="license-status">
 						<p className="license-active">
-							<CalIcon color="#000" />
+							<CalIcon color="var(--icon-color)" />
 							<strong>Pro license active!</strong>
 						</p>
 

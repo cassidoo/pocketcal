@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useStore, EventGroup, getMaxGroups } from "../store";
+import { useStore, EventGroup, getMaxGroups, Theme } from "../store";
 import { format } from "date-fns";
 import CalIcon from "./icons/CalIcon";
 import PencilIcon from "./icons/PencilIcon";
@@ -11,12 +11,15 @@ import SettingsIcon from "./icons/SettingsIcon";
 import HelpIcon from "./icons/HelpIcon";
 import CopyIcon from "./icons/CopyIcon";
 
+import { downloadICS } from "../ics";
 import "./Sidebar.css";
 
 function Sidebar({
 	setShowLicenseModal,
+	setShowEmbedModal,
 }: {
 	setShowLicenseModal: (show: boolean) => void;
+	setShowEmbedModal: (show: boolean) => void;
 }) {
 	const {
 		startDate,
@@ -35,6 +38,8 @@ function Sidebar({
 		isProUser,
 		firstDayOfWeek,
 		setFirstDayOfWeek,
+		theme,
+		setTheme,
 	} = useStore();
 	const maxGroups = getMaxGroups(isProUser);
 	const [newEventName, setNewEventName] = useState("");
@@ -124,21 +129,39 @@ function Sidebar({
 					onClick={() => setShowHelpModal(true)}
 					aria-label="Show instructions"
 				>
-					<HelpIcon color="#000" /> Help
+					<HelpIcon color="var(--icon-color)" /> Help
 				</button>
 				<button
 					className="footer-button"
 					onClick={handleCopyUrl}
 					aria-label="Copy URL to clipboard"
 				>
-					<CopyIcon color="#000" /> Copy URL
+					<CopyIcon color="var(--icon-color)" /> Copy URL
+				</button>
+			</div>
+		);
+		let exportAndEmbedButtons = (
+			<div className="sidebar-footer-buttons">
+				<button
+					className="footer-button"
+					onClick={() => downloadICS(eventGroups)}
+					aria-label="Export calendar to .ics file"
+				>
+					Export .ics
+				</button>
+				<button
+					className="footer-button"
+					onClick={() => setShowEmbedModal(true)}
+					aria-label="Get embed code"
+				>
+					Embed
 				</button>
 			</div>
 		);
 
 		return isProUser
-			? [helpAndCopyButtons, proButton]
-			: [proButton, helpAndCopyButtons];
+			? [helpAndCopyButtons, exportAndEmbedButtons, proButton]
+			: [proButton, helpAndCopyButtons, exportAndEmbedButtons];
 	};
 
 	return (
@@ -199,7 +222,7 @@ function Sidebar({
 										className="save-button"
 										aria-label="Save group name"
 									>
-										<SaveIcon color="#000" />
+										<SaveIcon color="var(--icon-color)" />
 									</button>
 									<button
 										onClick={(e) => {
@@ -209,7 +232,7 @@ function Sidebar({
 										className="cancel-button"
 										aria-label="Cancel editing"
 									>
-										<XIcon color="#000" />
+										<XIcon color="var(--icon-color)" />
 									</button>
 								</div>
 							</>
@@ -226,7 +249,7 @@ function Sidebar({
 										className="edit-button"
 										aria-label={`Edit ${group.name}`}
 									>
-										<PencilIcon color="#000" />
+										<PencilIcon color="var(--icon-color)" />
 									</button>
 									<button
 										onClick={(e) => {
@@ -237,7 +260,7 @@ function Sidebar({
 										className="delete-button"
 										aria-label={`Delete ${group.name}`}
 									>
-										<TrashIcon color="#000" />
+										<TrashIcon color="var(--icon-color)" />
 									</button>
 								</div>
 							</>
@@ -297,6 +320,18 @@ function Sidebar({
 						checked={showToday}
 						onChange={(e) => setShowToday(e.target.checked)}
 					/>
+				</div>
+				<div className="setting-item">
+					<label htmlFor="theme">Theme:</label>
+					<select
+						id="theme"
+						value={theme}
+						onChange={(e) => setTheme(e.target.value as Theme)}
+					>
+						<option value="system">System</option>
+						<option value="light">Light</option>
+						<option value="dark">Dark</option>
+					</select>
 				</div>
 			</>
 
