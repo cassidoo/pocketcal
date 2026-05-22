@@ -34,6 +34,7 @@ const Calendar: React.FC = () => {
 		addDateRange,
 		deleteDateRange,
 		firstDayOfWeek,
+		isEmbedMode,
 	} = useStore();
 
 	const calendarDates = getCalendarDates(startDate);
@@ -130,7 +131,7 @@ const Calendar: React.FC = () => {
 	};
 
 	const handleDateSelection = (date: Date) => {
-		if (!selectedGroupId) return;
+		if (isEmbedMode || !selectedGroupId) return;
 
 		const selectedGroup = eventGroups.find(
 			(group) => group.id === selectedGroupId
@@ -173,7 +174,7 @@ const Calendar: React.FC = () => {
 	};
 
 	const handleMouseDown = (date: Date) => {
-		if (!selectedGroupId) return;
+		if (isEmbedMode || !selectedGroupId) return;
 		setFocusedDate(date);
 
 		const selectedGroup = eventGroups.find(

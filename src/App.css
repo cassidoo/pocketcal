@@ -15,7 +15,7 @@
 	height: 100vh;
 	width: 100%;
 	position: relative;
-	background-color: #f9f9f9;
+	background-color: var(--bg-primary);
 }
 
 /* Responsive layout */
@@ -37,8 +37,8 @@
 	z-index: 200;
 	padding: 8px 8px 4px;
 	border-radius: 50%;
-	background: #f9f9f9;
-	border: 1px solid #ccc;
+	background: var(--bg-primary);
+	border: 1px solid var(--border-primary);
 	cursor: pointer;
 	display: none;
 	transition: transform 0.3s ease;
@@ -58,4 +58,39 @@
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 20px;
+}
+
+/* Embed mode */
+.app-container.embed-mode {
+	flex-direction: column;
+	position: relative;
+}
+
+.app-container.embed-mode .calendar-container {
+	cursor: default;
+}
+
+.app-container.embed-mode .calendar-day {
+	cursor: default;
+}
+
+.embed-edit-badge {
+	position: fixed;
+	bottom: 8px;
+	right: 12px;
+	background-color: var(--accent);
+	color: white;
+	padding: 4px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 500;
+	text-decoration: none;
+	opacity: 0.85;
+	transition: opacity 0.2s;
+	z-index: 100;
+}
+
+.embed-edit-badge:hover {
+	opacity: 1;
+	color: white;
 }

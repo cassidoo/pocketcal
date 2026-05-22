@@ -43,6 +43,8 @@ export interface EventGroup {
 	ranges: DateRange[];
 }
 
+export type Theme = "light" | "dark" | "system";
+
 interface AppState {
 	startDate: Date;
 	includeWeekends: boolean;
@@ -52,7 +54,10 @@ interface AppState {
 	showHelpModal: boolean;
 	licenseKey: string | null;
 	isProUser: boolean;
+	isEmbedMode: boolean;
 	firstDayOfWeek: 0 | 1; // 0 = sunday, 1 = monday
+	theme: Theme;
+	setTheme: (theme: Theme) => void;
 	setFirstDayOfWeek: (day: 0 | 1) => void;
 	setStartDate: (date: Date) => void;
 	setIncludeWeekends: (include: boolean) => void;
@@ -103,6 +108,12 @@ export const useStore = create<AppState>((set, get) => ({
 	showHelpModal: false,
 	licenseKey: localStorage.getItem("pocketcal_license") || null,
 	isProUser: false,
+	isEmbedMode: new URLSearchParams(window.location.search).get("embed") === "true",
+	theme: (localStorage.getItem("pocketcal_theme") as Theme) || "system",
+	setTheme: (theme: Theme) => {
+		localStorage.setItem("pocketcal_theme", theme);
+		set({ theme });
+	},
 	setFirstDayOfWeek: (day: 0 | 1) => set({ firstDayOfWeek: day }),
 
 	setStartDate: (date) => set({ startDate: startOfMonth(date) }),
@@ -386,7 +397,7 @@ export const useStore = create<AppState>((set, get) => ({
 		const compressed = LZString.compressToEncodedURIComponent(
 			JSON.stringify(compressedState)
 		);
-		return `${window.location.origin}${window.location.pathname}#${compressed}`;
+		return `${window.location.origin}${window.location.pathname}${window.location.search}#${compressed}`;
 	},
 }));
 
