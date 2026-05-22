@@ -62,6 +62,68 @@
 	margin-bottom: 6px;
 }
 
+.share-section {
+	margin-top: 20px;
+}
+
+.share-section h3 {
+	margin: 0 0 8px;
+}
+
+.share-section p {
+	margin: 0;
+}
+
+.share-tabs {
+	display: inline-flex;
+	margin-top: 12px;
+}
+
+.share-tabs button {
+	background-color: var(--bg-tertiary);
+	border: none;
+	color: var(--text-primary);
+	cursor: pointer;
+	padding: 6px 12px;
+}
+
+.share-tabs button:first-child {
+	border-radius: 4px 0 0 4px;
+}
+
+.share-tabs button:last-child {
+	border-radius: 0 4px 4px 0;
+}
+
+.share-tabs button + button {
+	margin-left: 1px;
+}
+
+.share-tabs button.active {
+	background-color: var(--accent);
+	color: white;
+}
+
+.share-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+.share-actions {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 12px;
+}
+
+button.icon-btn {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	white-space: nowrap;
+}
+
 button.btn {
 	background-color: var(--accent);
 	color: white;
@@ -116,7 +178,7 @@ p.license-active {
 	gap: 8px;
 }
 
-pre.license-key-display {
+pre.copy-text-embed {
 	background-color: var(--bg-code);
 	border: 1px solid var(--border-primary);
 	border-radius: 4px;
@@ -125,4 +187,5 @@ pre.license-key-display {
 	font-family: monospace;
 	margin-top: 8px;
 	color: var(--text-primary);
+	white-space: nowrap;
 }

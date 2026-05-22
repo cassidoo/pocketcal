@@ -91,7 +91,7 @@ const LicenseModal: React.FC<LicenseModalProps> = ({ onClose }) => {
 							<strong>Pro license active!</strong>
 						</p>
 
-						<pre className="license-key-display">
+						<pre className="copy-text-embed">
 							{licenseKey ||
 								"No license key! If you see this, something is wrong."}
 						</pre>
