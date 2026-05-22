@@ -10,8 +10,8 @@ import PlusIcon from "./icons/PlusIcon";
 import SettingsIcon from "./icons/SettingsIcon";
 import HelpIcon from "./icons/HelpIcon";
 import CopyIcon from "./icons/CopyIcon";
+import ShareIcon from "./icons/ShareIcon";
 
-import { downloadICS } from "../ics";
 import "./Sidebar.css";
 
 function Sidebar({
@@ -122,15 +122,8 @@ function Sidebar({
 				</button>
 			</div>
 		);
-		let helpAndCopyButtons = (
+		let copyAndHelpButtons = (
 			<div className="sidebar-footer-buttons">
-				<button
-					className="footer-button"
-					onClick={() => setShowHelpModal(true)}
-					aria-label="Show instructions"
-				>
-					<HelpIcon color="var(--icon-color)" /> Help
-				</button>
 				<button
 					className="footer-button"
 					onClick={handleCopyUrl}
@@ -138,30 +131,30 @@ function Sidebar({
 				>
 					<CopyIcon color="var(--icon-color)" /> Copy URL
 				</button>
+				<button
+					className="footer-button"
+					onClick={() => setShowHelpModal(true)}
+					aria-label="Show instructions"
+				>
+					<HelpIcon color="var(--icon-color)" /> Help
+				</button>
 			</div>
 		);
-		let exportAndEmbedButtons = (
+		let shareButton = (
 			<div className="sidebar-footer-buttons">
 				<button
 					className="footer-button"
-					onClick={() => downloadICS(eventGroups)}
-					aria-label="Export calendar to .ics file"
-				>
-					Export .ics
-				</button>
-				<button
-					className="footer-button"
 					onClick={() => setShowEmbedModal(true)}
-					aria-label="Get embed code"
+					aria-label="Share calendar"
 				>
-					Embed
+					<ShareIcon color="var(--icon-color)" /> Share
 				</button>
 			</div>
 		);
 
 		return isProUser
-			? [helpAndCopyButtons, exportAndEmbedButtons, proButton]
-			: [proButton, helpAndCopyButtons, exportAndEmbedButtons];
+			? [copyAndHelpButtons, shareButton, proButton]
+			: [proButton, copyAndHelpButtons, shareButton];
 	};
 
 	return (
