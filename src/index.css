@@ -3,6 +3,8 @@
 	line-height: 1.5;
 	font-weight: 400;
 
+	color-scheme: light;
+
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -56,6 +58,8 @@
 }
 
 [data-theme="dark"] {
+	color-scheme: dark;
+
 	--bg-primary: #1a1a2e;
 	--bg-secondary: #1e1e3a;
 	--bg-tertiary: #252545;
