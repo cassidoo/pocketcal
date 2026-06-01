@@ -94,3 +94,40 @@
 	opacity: 1;
 	color: white;
 }
+
+.embed-wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	border: 1px solid var(--border-light);
+	box-sizing: border-box;
+	border-radius: 8px;
+	overflow: hidden;
+	margin: 10px;
+}
+
+.embed-key {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 12px 16px;
+	background-color: var(--bg-card);
+	border-bottom: 1px solid var(--border-light);
+	align-items: center;
+	justify-content: center;
+}
+
+.embed-key-item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.9em;
+	color: var(--text-primary);
+}
+
+.embed-key-item .color-indicator {
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	display: inline-block;
+}
