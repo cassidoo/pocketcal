@@ -34,6 +34,7 @@ function Sidebar({
 		addEventGroup,
 		updateEventGroup,
 		deleteEventGroup,
+		reorderEventGroups,
 		selectEventGroup,
 		isProUser,
 		firstDayOfWeek,
@@ -44,6 +45,9 @@ function Sidebar({
 	const maxGroups = getMaxGroups(isProUser);
 	const [newEventName, setNewEventName] = useState("");
 	const [editingGroup, setEditingGroup] = useState<EventGroup | null>(null);
+	const [draggedGroupId, setDraggedGroupId] = useState<string | null>(null);
+	const [dragOverGroupId, setDragOverGroupId] = useState<string | null>(null);
+	const [reorderAnnouncement, setReorderAnnouncement] = useState("");
 	const [rawStartDate, setRawStartDate] = useState<string>(format(startDate, "yyyy-MM"))
 
 	const isValidDate = (rawDate: string): boolean => {
@@ -93,6 +97,100 @@ function Sidebar({
 		}
 	};
 
+	const announceReorder = (group: EventGroup, targetIndex: number) => {
+		setReorderAnnouncement(
+			`${group.name} moved to position ${targetIndex + 1} of ${eventGroups.length}.`
+		);
+	};
+
+	const handleDragStart = (
+		e: React.DragEvent<HTMLButtonElement>,
+		group: EventGroup
+	) => {
+		if (editingGroup) {
+			e.preventDefault();
+			return;
+		}
+
+		e.stopPropagation();
+		e.dataTransfer.effectAllowed = "move";
+		e.dataTransfer.setData("text/plain", group.id);
+		setDraggedGroupId(group.id);
+	};
+
+	const handleDragOver = (
+		e: React.DragEvent<HTMLDivElement>,
+		group: EventGroup
+	) => {
+		if (!draggedGroupId || draggedGroupId === group.id || editingGroup) {
+			return;
+		}
+
+		e.preventDefault();
+		e.dataTransfer.dropEffect = "move";
+		setDragOverGroupId(group.id);
+	};
+
+	const handleDrop = (
+		e: React.DragEvent<HTMLDivElement>,
+		targetGroup: EventGroup
+	) => {
+		e.preventDefault();
+		const droppedGroupId =
+			e.dataTransfer.getData("text/plain") || draggedGroupId;
+		const droppedGroup = eventGroups.find((group) => group.id === droppedGroupId);
+
+		if (droppedGroup && droppedGroup.id !== targetGroup.id) {
+			const targetIndex = eventGroups.findIndex(
+				(group) => group.id === targetGroup.id
+			);
+			reorderEventGroups(droppedGroup.id, targetGroup.id);
+			announceReorder(droppedGroup, targetIndex);
+		}
+
+		setDraggedGroupId(null);
+		setDragOverGroupId(null);
+	};
+
+	const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+		if (e.currentTarget.contains(e.relatedTarget as Node | null)) {
+			return;
+		}
+
+		setDragOverGroupId(null);
+	};
+
+	const handleDragEnd = () => {
+		setDraggedGroupId(null);
+		setDragOverGroupId(null);
+	};
+
+	const handleReorderKeyDown = (
+		e: React.KeyboardEvent<HTMLButtonElement>,
+		group: EventGroup
+	) => {
+		e.stopPropagation();
+
+		if (editingGroup || (e.key !== "ArrowUp" && e.key !== "ArrowDown")) {
+			return;
+		}
+
+		const currentIndex = eventGroups.findIndex(
+			(eventGroup) => eventGroup.id === group.id
+		);
+		const targetIndex =
+			e.key === "ArrowUp" ? currentIndex - 1 : currentIndex + 1;
+
+		if (targetIndex < 0 || targetIndex >= eventGroups.length) {
+			e.preventDefault();
+			return;
+		}
+
+		e.preventDefault();
+		reorderEventGroups(group.id, eventGroups[targetIndex].id);
+		announceReorder(group, targetIndex);
+	};
+
 	const handleCopyUrl = () => {
 		navigator.clipboard.writeText(window.location.href);
 	};
@@ -111,7 +209,7 @@ function Sidebar({
 	};
 
 	const footerGroups = () => {
-		let proButton = (
+		const proButton = (
 			<div className="sidebar-footer-buttons">
 				<button
 					className="footer-button"
@@ -122,7 +220,7 @@ function Sidebar({
 				</button>
 			</div>
 		);
-		let copyAndHelpButtons = (
+		const copyAndHelpButtons = (
 			<div className="sidebar-footer-buttons">
 				<button
 					className="footer-button"
@@ -140,7 +238,7 @@ function Sidebar({
 				</button>
 			</div>
 		);
-		let shareButton = (
+		const shareButton = (
 			<div className="sidebar-footer-buttons">
 				<button
 					className="footer-button"
@@ -168,22 +266,43 @@ function Sidebar({
 				<CalIcon height={20} />
 				Event Groups ({eventGroups.length}/{maxGroups})
 			</h3>
+			<div className="sr-only" aria-live="polite">
+				{reorderAnnouncement}
+			</div>
 			<div className="event-groups-list" role="list">
 				{eventGroups.map((group) => (
 					<div
 						key={group.id}
 						className={`event-group-item ${
 							selectedGroupId === group.id ? "selected" : ""
-						} ${editingGroup?.id === group.id ? "editing" : ""}`}
+						} ${editingGroup?.id === group.id ? "editing" : ""} ${
+							draggedGroupId === group.id ? "dragging" : ""
+						} ${dragOverGroupId === group.id ? "drag-over" : ""}`}
 						onClick={() =>
 							editingGroup?.id !== group.id && selectEventGroup(group.id)
 						}
 						onKeyDown={(e) => handleKeyDown(e, group)}
+						onDragOver={(e) => handleDragOver(e, group)}
+						onDragLeave={handleDragLeave}
+						onDrop={(e) => handleDrop(e, group)}
 						tabIndex={editingGroup?.id !== group.id ? 0 : -1}
 						role="listitem"
 						aria-selected={selectedGroupId === group.id}
 						aria-label={`Event group: ${group.name}`}
 					>
+						<button
+							type="button"
+							className="drag-handle"
+							draggable={!editingGroup}
+							onClick={(e) => e.stopPropagation()}
+							onDragStart={(e) => handleDragStart(e, group)}
+							onDragEnd={handleDragEnd}
+							onKeyDown={(e) => handleReorderKeyDown(e, group)}
+							disabled={!!editingGroup}
+							aria-label={`Move ${group.name}. Use up and down arrow keys to reorder.`}
+						>
+							Drag
+						</button>
 						<span
 							className="color-indicator"
 							style={{ backgroundColor: group.color }}

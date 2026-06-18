@@ -68,6 +68,7 @@ interface AppState {
 	addEventGroup: (name: string) => EventGroup;
 	updateEventGroup: (id: string, name: string) => void;
 	deleteEventGroup: (id: string) => void;
+	reorderEventGroups: (draggedId: string, targetId: string) => void;
 	selectEventGroup: (id: string | null) => void;
 	addDateRange: (groupId: string, range: DateRange) => void;
 	updateDateRange: (
@@ -210,6 +211,30 @@ export const useStore = create<AppState>((set, get) => ({
 			selectedGroupId:
 				state.selectedGroupId === id ? null : state.selectedGroupId,
 		})),
+
+	reorderEventGroups: (draggedId, targetId) =>
+		set((state) => {
+			const draggedIndex = state.eventGroups.findIndex(
+				(group) => group.id === draggedId
+			);
+			const targetIndex = state.eventGroups.findIndex(
+				(group) => group.id === targetId
+			);
+
+			if (
+				draggedIndex === -1 ||
+				targetIndex === -1 ||
+				draggedIndex === targetIndex
+			) {
+				return state;
+			}
+
+			const eventGroups = [...state.eventGroups];
+			const [draggedGroup] = eventGroups.splice(draggedIndex, 1);
+			eventGroups.splice(targetIndex, 0, draggedGroup);
+
+			return { eventGroups };
+		}),
 
 	selectEventGroup: (id) => set({ selectedGroupId: id }),
 
