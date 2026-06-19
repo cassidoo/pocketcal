@@ -89,6 +89,36 @@ h2 {
 	min-height: 30px;
 }
 
+.event-group-item.dragging {
+	opacity: 0.6;
+}
+
+.event-group-item.drag-over {
+	border-color: var(--drag-border);
+	box-shadow: 0 0 0 2px var(--drag-border);
+}
+
+.drag-handle {
+	color: var(--text-primary);
+	font-size: 0.75em;
+	line-height: 1;
+	padding: 4px 6px !important;
+	border: 1px solid var(--border-secondary) !important;
+	border-radius: 4px;
+	background-color: var(--bg-tertiary) !important;
+	cursor: grab !important;
+	flex-shrink: 0;
+}
+
+.drag-handle:active {
+	cursor: grabbing !important;
+}
+
+.drag-handle:disabled {
+	cursor: not-allowed !important;
+	opacity: 0.5;
+}
+
 .event-group-item .group-name {
 	flex-grow: 1;
 	overflow: hidden;
@@ -272,4 +302,16 @@ select {
 	color: var(--text-input);
 	font-size: 1em;
 	padding: 4px;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
