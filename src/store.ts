@@ -41,6 +41,7 @@ export interface EventGroup {
 	name: string;
 	color: string;
 	ranges: DateRange[];
+	isVisible: boolean;
 }
 
 export type Theme = "light" | "dark" | "system";
@@ -68,6 +69,7 @@ interface AppState {
 	addEventGroup: (name: string) => EventGroup;
 	updateEventGroup: (id: string, name: string) => void;
 	deleteEventGroup: (id: string) => void;
+	toggleEventGroupVisibility: (id: string) => void;
 	reorderEventGroups: (draggedId: string, targetId: string) => void;
 	selectEventGroup: (id: string | null) => void;
 	addDateRange: (groupId: string, range: DateRange) => void;
@@ -89,6 +91,7 @@ const createDefaultEventGroup = (index = 0): EventGroup => ({
 	name: "My Events",
 	color: GROUP_COLORS[index].hex,
 	ranges: [],
+	isVisible: true,
 });
 
 // Create a function to get the default state
@@ -183,6 +186,7 @@ export const useStore = create<AppState>((set, get) => ({
 				name,
 				color: availableColor.hex,
 				ranges: [],
+				isVisible: true,
 			};
 			return {
 				eventGroups: [...state.eventGroups, newGroup],
@@ -194,6 +198,7 @@ export const useStore = create<AppState>((set, get) => ({
 				name: "",
 				color: "",
 				ranges: [],
+				isVisible: true,
 			}
 		);
 	},
@@ -210,6 +215,15 @@ export const useStore = create<AppState>((set, get) => ({
 			eventGroups: state.eventGroups.filter((group) => group.id !== id),
 			selectedGroupId:
 				state.selectedGroupId === id ? null : state.selectedGroupId,
+		})),
+
+	toggleEventGroupVisibility: (id) =>
+		set((state) => ({
+			eventGroups: state.eventGroups.map((group) =>
+				group.id === id
+					? { ...group, isVisible: !group.isVisible }
+					: group
+			),
 		})),
 
 	reorderEventGroups: (draggedId, targetId) =>
@@ -252,13 +266,13 @@ export const useStore = create<AppState>((set, get) => ({
 			eventGroups: state.eventGroups.map((group) =>
 				group.id === groupId
 					? {
-							...group,
-							ranges: group.ranges.map((r) =>
-								r.start === oldRange.start && r.end === oldRange.end
-									? newRange
-									: r
-							),
-					  }
+						...group,
+						ranges: group.ranges.map((r) =>
+							r.start === oldRange.start && r.end === oldRange.end
+								? newRange
+								: r
+						),
+					}
 					: group
 			),
 		})),
@@ -268,15 +282,15 @@ export const useStore = create<AppState>((set, get) => ({
 			eventGroups: state.eventGroups.map((group) =>
 				group.id === groupId
 					? {
-							...group,
-							ranges: group.ranges.filter(
-								(r) =>
-									!(
-										r.start === rangeToDelete.start &&
-										r.end === rangeToDelete.end
-									)
-							),
-					  }
+						...group,
+						ranges: group.ranges.filter(
+							(r) =>
+								!(
+									r.start === rangeToDelete.start &&
+									r.end === rangeToDelete.end
+								)
+						),
+					}
 					: group
 			),
 		})),
@@ -345,6 +359,7 @@ export const useStore = create<AppState>((set, get) => ({
 											representation: "date",
 										}),
 									})),
+									isVisible: g.v !== false,
 								};
 							}
 						);
@@ -361,9 +376,12 @@ export const useStore = create<AppState>((set, get) => ({
 							firstDayOfWeek: decodedState.f === 1 ? 1 : 0,
 						});
 					} else {
-						const eventGroups = decodedState.eventGroups ?? [
+						const eventGroups = (decodedState.eventGroups ?? [
 							createDefaultEventGroup(),
-						];
+						]).map((group: any) => ({
+							...group,
+							isVisible: group.isVisible !== false,
+						}));
 						set({
 							startDate: startOfMonth(parseISO(decodedState.startDate)),
 							includeWeekends: decodedState.includeWeekends ?? true,
@@ -391,27 +409,28 @@ export const useStore = create<AppState>((set, get) => ({
 		const startDate = state.startDate;
 
 		const compressedState: { s: string; w?: boolean; t?: boolean; g?: any[]; f?: 0 | 1 } =
-			{
-				s: formatISO(startDate, { representation: "date" }),
-				w: state.includeWeekends ? undefined : false,
-				t: state.showToday ? undefined : false,
-				g: state.eventGroups.map((group) => {
-					const compressedGroup: any = {
-						n: group.name === `My Events` ? undefined : group.name,
-						c: GROUP_COLORS.findIndex((c) => c.hex === group.color),
-						r: group.ranges.map((range) => [
-							differenceInDays(parseISO(range.start), startDate),
-							differenceInDays(parseISO(range.end), startDate),
-						]),
-					};
-					Object.keys(compressedGroup).forEach(
-						(key) =>
-							compressedGroup[key] === undefined && delete compressedGroup[key]
-					);
-					return compressedGroup;
-				}),
-				f: state.firstDayOfWeek === 0 ? undefined : state.firstDayOfWeek,
-			};
+		{
+			s: formatISO(startDate, { representation: "date" }),
+			w: state.includeWeekends ? undefined : false,
+			t: state.showToday ? undefined : false,
+			g: state.eventGroups.map((group) => {
+				const compressedGroup: any = {
+					n: group.name === `My Events` ? undefined : group.name,
+					c: GROUP_COLORS.findIndex((c) => c.hex === group.color),
+					v: group.isVisible === false ? false : undefined,
+					r: group.ranges.map((range) => [
+						differenceInDays(parseISO(range.start), startDate),
+						differenceInDays(parseISO(range.end), startDate),
+					]),
+				};
+				Object.keys(compressedGroup).forEach(
+					(key) =>
+						compressedGroup[key] === undefined && delete compressedGroup[key]
+				);
+				return compressedGroup;
+			}),
+			f: state.firstDayOfWeek === 0 ? undefined : state.firstDayOfWeek,
+		};
 
 		// Remove default values
 		if (compressedState.w === undefined) delete compressedState.w;

@@ -325,12 +325,12 @@ const Calendar: React.FC = () => {
 
 	const getRangeStyles = (date: Date): React.CSSProperties[] => {
 		const styles: React.CSSProperties[] = [];
-		const groupsWithDate = eventGroups.filter((group) =>
-			isDateInRange(date, group)
+		const visibleGroups = eventGroups.filter(
+			(group) => group.isVisible !== false && isDateInRange(date, group)
 		);
 
-		const totalGroups = groupsWithDate.length;
-		groupsWithDate.forEach((group, index) => {
+		const totalGroups = visibleGroups.length;
+		visibleGroups.forEach((group, index) => {
 			styles.push({
 				backgroundColor: group.color,
 				position: "absolute",

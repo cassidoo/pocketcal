@@ -162,6 +162,14 @@ h2 {
 	background-color: var(--bg-hover);
 }
 
+.event-group-item.hidden {
+	opacity: 0.6;
+}
+
+.visibility-toggle.hidden svg {
+	opacity: 0.45;
+}
+
 .color-indicator {
 	display: inline-block;
 	width: 15px;
