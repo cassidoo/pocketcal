@@ -49,6 +49,7 @@ function Sidebar({
 	const [dragOverGroupId, setDragOverGroupId] = useState<string | null>(null);
 	const [reorderAnnouncement, setReorderAnnouncement] = useState("");
 	const [rawStartDate, setRawStartDate] = useState<string>(format(startDate, "yyyy-MM"))
+	const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
 
 	const isValidDate = (rawDate: string): boolean => {
 		const [year, month] = rawDate.split("-");
@@ -115,6 +116,17 @@ function Sidebar({
 		e.stopPropagation();
 		e.dataTransfer.effectAllowed = "move";
 		e.dataTransfer.setData("text/plain", group.id);
+
+		const item = e.currentTarget.closest<HTMLElement>(".event-group-item");
+		if (item) {
+			const rect = item.getBoundingClientRect();
+			e.dataTransfer.setDragImage(
+				item,
+				e.clientX - rect.left,
+				e.clientY - rect.top
+			);
+		}
+
 		setDraggedGroupId(group.id);
 	};
 
@@ -191,8 +203,14 @@ function Sidebar({
 		announceReorder(group, targetIndex);
 	};
 
-	const handleCopyUrl = () => {
-		navigator.clipboard.writeText(window.location.href);
+	const handleCopyUrl = async () => {
+		try {
+			await navigator.clipboard.writeText(window.location.href);
+			setCopyState("copied");
+		} catch {
+			setCopyState("error");
+		}
+		setTimeout(() => setCopyState("idle"), 2000);
 	};
 
 	const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,7 +230,7 @@ function Sidebar({
 		const proButton = (
 			<div className="sidebar-footer-buttons">
 				<button
-					className="footer-button"
+					className="footer-button pro-button"
 					onClick={() => setShowLicenseModal(true)}
 					aria-label="Show license modal"
 				>
@@ -223,11 +241,16 @@ function Sidebar({
 		const copyAndHelpButtons = (
 			<div className="sidebar-footer-buttons">
 				<button
-					className="footer-button"
+					className={`footer-button ${copyState === "copied" ? "copied" : ""}`}
 					onClick={handleCopyUrl}
 					aria-label="Copy URL to clipboard"
 				>
-					<CopyIcon color="var(--icon-color)" /> Copy URL
+					<CopyIcon color="var(--icon-color)" />{" "}
+					{copyState === "copied"
+						? "Copied!"
+						: copyState === "error"
+						? "Press Ctrl+C"
+						: "Copy URL"}
 				</button>
 				<button
 					className="footer-button"
@@ -447,7 +470,16 @@ function Sidebar({
 				</div>
 			</>
 
-			<div className="sidebar-footer">{footerGroups()}</div>
+			<div className="sidebar-footer">
+				<div className="sr-only" aria-live="polite">
+					{copyState === "copied"
+						? "Link copied to clipboard."
+						: copyState === "error"
+						? "Couldn't copy automatically. Press Control or Command + C to copy."
+						: ""}
+				</div>
+				{footerGroups()}
+			</div>
 		</div>
 	);
 }
