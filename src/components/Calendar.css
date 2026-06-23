@@ -163,7 +163,7 @@
 .calendar-day:has(.range-indicator) .day-number {
 	color: var(--day-text-on-range);
 	font-weight: 700;
-	background-color: rgba(26, 14, 48, 0.52);
+	background-color: rgba(26, 14, 48, 0.2);
 	text-shadow: 0 1px 1px var(--day-shadow-on-range);
 }
 
