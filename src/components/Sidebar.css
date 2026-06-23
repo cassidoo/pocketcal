@@ -15,7 +15,8 @@
 }
 
 .sidebar h1 {
-	display: block;
+	display: flex;
+	align-items: center;
 	font-family: var(--font-display);
 	font-size: 2rem;
 	font-weight: 500;
@@ -63,7 +64,7 @@ h2 {
 	padding: 3px 9px;
 	border-radius: var(--radius-sm);
 	margin-left: 8px;
-	vertical-align: 0.18em;
+	margin-bottom: 0.35em;
 }
 
 @media (max-width: 768px) {
