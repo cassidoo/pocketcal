@@ -1,5 +1,6 @@
 :root {
-	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+		"Roboto", "Helvetica Neue", sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
 
@@ -10,108 +11,217 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
-	/* Light theme (default) */
-	--bg-primary: #f9f9f9;
+	/* ---- Type ---- */
+	--font-ui: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+		"Roboto", "Helvetica Neue", sans-serif;
+	--font-display: "Domine", Georgia, "Times New Roman", serif;
+
+	/* ---- Radius scale ---- */
+	--radius-xs: 6px;
+	--radius-sm: 8px;
+	--radius-md: 12px;
+	--radius-lg: 16px;
+	--radius-xl: 22px;
+	--radius-pill: 999px;
+
+	/* ---- Motion ---- */
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--dur-fast: 140ms;
+	--dur-mid: 220ms;
+
+	/*
+	 * Light theme (default).
+	 * Hex fallbacks are declared first, then overridden with OKLCH for
+	 * browsers that support it. Brand purple + the 5 group colors are
+	 * identity-preserving; their values are intentionally unchanged.
+	 */
+	--bg-primary: #f4f1fb;
 	--bg-secondary: #ffffff;
-	--bg-tertiary: #f0f0f0;
-	--bg-hover: #f0f0f0;
-	--bg-active: #e0e0e0;
-	--bg-pressed: #d0d0d0;
-	--bg-card: white;
-	--bg-grid: #f5f5f5;
-	--bg-weekday: #f8f9fa;
-	--bg-input: #fff;
-	--bg-code: #f5f5f5;
+	--bg-tertiary: #ece7f7;
+	--bg-hover: #efeaf9;
+	--bg-hover-soft: #f7f4fc;
+	--bg-active: #e4dcf4;
+	--bg-pressed: #d8cdee;
+	--bg-card: #ffffff;
+	--bg-grid: #ece7f7;
+	--bg-weekday: #f4f1fb;
+	--bg-input: #ffffff;
+	--bg-code: #f1edfa;
+	--bg-sidebar: #efeaf8;
 
-	--text-primary: #333;
-	--text-secondary: #666;
-	--text-heading: #213547;
-	--text-input: #000;
+	--text-primary: #2c2440;
+	--text-secondary: #645b7e;
+	--text-heading: #241d38;
+	--text-input: #241d38;
 
-	--border-primary: #ccc;
-	--border-secondary: #ddd;
-	--border-light: #eee;
+	--border-primary: #cfc6e6;
+	--border-secondary: #ddd6ef;
+	--border-light: #e7e1f5;
 
 	--accent: #8a35de;
-	--accent-soft: rgba(138, 53, 222, 0.05);
-	--accent-border: rgba(138, 53, 222, 0.25);
-	--accent-focus: rgba(138, 53, 222, 0.3);
-	--accent-outline: rgba(138, 53, 222, 0.5);
-	--accent-outline-strong: rgba(138, 53, 222, 0.8);
+	--accent-strong: #7726c9;
+	--accent-contrast: #ffffff;
+	--accent-soft: rgba(138, 53, 222, 0.08);
+	--accent-border: rgba(138, 53, 222, 0.28);
+	--accent-focus: rgba(138, 53, 222, 0.45);
+	--accent-outline: rgba(138, 53, 222, 0.55);
+	--accent-outline-strong: rgba(138, 53, 222, 0.95);
 
 	--drag-bg: #e3f2fd;
 	--drag-border: #2196f3;
 
 	--today-border: #eb4888;
-	--today-text-on-range: #333;
-	--today-bg-on-range: #fff;
+	--today-text-on-range: #241d38;
+	--today-bg-on-range: #ffffff;
 
-	--day-text-on-range: white;
-	--day-shadow-on-range: rgba(0, 0, 0, 0.7);
+	--day-text-on-range: #ffffff;
+	--day-shadow-on-range: rgba(0, 0, 0, 0.55);
 
-	--link-color: #646cff;
-	--link-hover: #747bff;
+	--link-color: #7726c9;
+	--link-hover: #8a35de;
 
-	--icon-color: #000;
+	--icon-color: #2c2440;
 
-	--calendar-picker-filter: brightness(0);
+	--calendar-picker-filter: invert(28%) sepia(38%) saturate(2200%)
+		hue-rotate(255deg) brightness(85%);
 
 	--scrollbar-thumb: #c4a5e6;
 	--scrollbar-thumb-hover: #b088d9;
 	--scrollbar-track: var(--bg-primary);
+
+	/* ---- Shadows (purple-tinted, soft) ---- */
+	--shadow-sm: 0 1px 2px rgba(56, 24, 102, 0.06),
+		0 2px 6px rgba(56, 24, 102, 0.05);
+	--shadow-md: 0 4px 10px rgba(56, 24, 102, 0.08),
+		0 10px 24px rgba(56, 24, 102, 0.08);
+	--shadow-lg: 0 12px 30px rgba(56, 24, 102, 0.16),
+		0 28px 60px rgba(56, 24, 102, 0.14);
+	--shadow-accent: 0 6px 16px rgba(138, 53, 222, 0.32);
+}
+
+@supports (color: oklch(0% 0 0)) {
+	:root {
+		--bg-primary: oklch(0.965 0.012 300);
+		--bg-secondary: oklch(1 0 0);
+		--bg-tertiary: oklch(0.94 0.018 300);
+		--bg-hover: oklch(0.95 0.018 300);
+		--bg-hover-soft: oklch(0.972 0.01 300);
+		--bg-active: oklch(0.915 0.026 300);
+		--bg-pressed: oklch(0.875 0.036 300);
+		--bg-card: oklch(1 0 0);
+		--bg-grid: oklch(0.94 0.018 300);
+		--bg-weekday: oklch(0.965 0.012 300);
+		--bg-input: oklch(1 0 0);
+		--bg-code: oklch(0.955 0.016 300);
+		--bg-sidebar: oklch(0.95 0.02 300);
+
+		--text-primary: oklch(0.34 0.04 300);
+		--text-secondary: oklch(0.5 0.045 300);
+		--text-heading: oklch(0.29 0.05 300);
+		--text-input: oklch(0.29 0.05 300);
+
+		--border-primary: oklch(0.84 0.04 300);
+		--border-secondary: oklch(0.89 0.025 300);
+		--border-light: oklch(0.92 0.02 300);
+
+		--accent: oklch(0.55 0.215 300);
+		--accent-strong: oklch(0.49 0.21 300);
+		--link-color: oklch(0.49 0.21 300);
+		--link-hover: oklch(0.55 0.215 300);
+		--icon-color: oklch(0.34 0.04 300);
+	}
 }
 
 [data-theme="dark"] {
 	color-scheme: dark;
 
-	--bg-primary: #1a1a2e;
-	--bg-secondary: #1e1e3a;
-	--bg-tertiary: #252545;
-	--bg-hover: #2a2a4a;
-	--bg-active: #353560;
-	--bg-pressed: #404070;
-	--bg-card: #1e1e3a;
-	--bg-grid: #222244;
-	--bg-weekday: #252548;
-	--bg-input: #252545;
-	--bg-code: #252545;
+	/* Deep plum base so the purple accent belongs (was clashing navy). */
+	--bg-primary: #1c1530;
+	--bg-secondary: #261c40;
+	--bg-tertiary: #2f2350;
+	--bg-hover: #342758;
+	--bg-hover-soft: #2c2150;
+	--bg-active: #3f2f69;
+	--bg-pressed: #4a387b;
+	--bg-card: #261c40;
+	--bg-grid: #2a1f48;
+	--bg-weekday: #2a1f48;
+	--bg-input: #2f2350;
+	--bg-code: #2a1f48;
+	--bg-sidebar: #221836;
 
-	--text-primary: #e0e0e0;
-	--text-secondary: #a0a0b0;
-	--text-heading: #e8e8f0;
-	--text-input: #e0e0e0;
+	--text-primary: #e8e2f6;
+	--text-secondary: #b1a6cf;
+	--text-heading: #f1ecfb;
+	--text-input: #e8e2f6;
 
-	--border-primary: #404060;
-	--border-secondary: #353555;
-	--border-light: #2a2a4a;
+	--border-primary: #443663;
+	--border-secondary: #3a2d57;
+	--border-light: #322748;
 
-	--accent: #a855f7;
-	--accent-soft: rgba(168, 85, 247, 0.1);
-	--accent-border: rgba(168, 85, 247, 0.35);
-	--accent-focus: rgba(168, 85, 247, 0.4);
-	--accent-outline: rgba(168, 85, 247, 0.5);
-	--accent-outline-strong: rgba(168, 85, 247, 0.8);
+	--accent: #b06bf7;
+	--accent-strong: #c084fc;
+	--accent-contrast: #1c1530;
+	--accent-soft: rgba(176, 107, 247, 0.14);
+	--accent-border: rgba(176, 107, 247, 0.4);
+	--accent-focus: rgba(176, 107, 247, 0.55);
+	--accent-outline: rgba(176, 107, 247, 0.6);
+	--accent-outline-strong: rgba(192, 132, 252, 0.95);
 
-	--drag-bg: rgba(33, 150, 243, 0.15);
+	--drag-bg: rgba(33, 150, 243, 0.18);
 	--drag-border: #64b5f6;
 
 	--today-border: #f472b6;
-	--today-text-on-range: #e0e0e0;
-	--today-bg-on-range: #1e1e3a;
+	--today-text-on-range: #f1ecfb;
+	--today-bg-on-range: #261c40;
 
-	--day-text-on-range: white;
-	--day-shadow-on-range: rgba(0, 0, 0, 0.9);
+	--day-text-on-range: #ffffff;
+	--day-shadow-on-range: rgba(0, 0, 0, 0.85);
 
-	--link-color: #818cf8;
-	--link-hover: #a5b4fc;
+	--link-color: #c79bf9;
+	--link-hover: #d9bcfc;
 
-	--icon-color: #e0e0e0;
+	--icon-color: #e8e2f6;
 
 	--calendar-picker-filter: brightness(0) invert(1);
 
-	--scrollbar-thumb: #6b21a8;
-	--scrollbar-thumb-hover: #7e31bd;
+	--scrollbar-thumb: #6b3fa8;
+	--scrollbar-thumb-hover: #8456c5;
 	--scrollbar-track: var(--bg-primary);
+
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.25);
+	--shadow-md: 0 6px 16px rgba(0, 0, 0, 0.4);
+	--shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+	--shadow-accent: 0 6px 18px rgba(176, 107, 247, 0.4);
+}
+
+@supports (color: oklch(0% 0 0)) {
+	[data-theme="dark"] {
+		--bg-primary: oklch(0.22 0.05 305);
+		--bg-secondary: oklch(0.27 0.06 305);
+		--bg-tertiary: oklch(0.31 0.07 305);
+		--bg-hover: oklch(0.34 0.075 305);
+		--bg-hover-soft: oklch(0.305 0.062 305);
+		--bg-active: oklch(0.38 0.085 305);
+		--bg-pressed: oklch(0.43 0.095 305);
+		--bg-card: oklch(0.27 0.06 305);
+		--bg-grid: oklch(0.29 0.065 305);
+		--bg-weekday: oklch(0.29 0.065 305);
+		--bg-input: oklch(0.31 0.07 305);
+		--bg-code: oklch(0.29 0.065 305);
+		--bg-sidebar: oklch(0.25 0.055 305);
+
+		--text-primary: oklch(0.92 0.025 305);
+		--text-secondary: oklch(0.76 0.05 305);
+		--text-heading: oklch(0.95 0.02 305);
+
+		--border-primary: oklch(0.4 0.07 305);
+		--border-secondary: oklch(0.35 0.06 305);
+		--border-light: oklch(0.32 0.055 305);
+
+		--accent: oklch(0.68 0.18 305);
+		--accent-strong: oklch(0.74 0.16 305);
+	}
 }
 
 /* Custom scrollbar */
@@ -121,8 +231,8 @@
 }
 
 *::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
+	width: 10px;
+	height: 10px;
 }
 
 *::-webkit-scrollbar-track {
@@ -131,7 +241,8 @@
 
 *::-webkit-scrollbar-thumb {
 	background: var(--scrollbar-thumb);
-	border-radius: 4px;
+	border-radius: var(--radius-pill);
+	border: 2px solid var(--scrollbar-track);
 }
 
 *::-webkit-scrollbar-thumb:hover {
@@ -139,7 +250,7 @@
 }
 
 a {
-	font-weight: 500;
+	font-weight: 600;
 	color: var(--link-color);
 	text-decoration: inherit;
 }
@@ -149,9 +260,7 @@ a:hover {
 
 body {
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-		sans-serif;
+	font-family: var(--font-ui);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	background-color: var(--bg-primary);
@@ -159,18 +268,33 @@ body {
 }
 
 button {
-	border-radius: 8px;
+	border-radius: var(--radius-md);
 	border: 1px solid transparent;
 	padding: 0.6em 1.2em;
 	font-size: 1em;
-	font-weight: 500;
+	font-weight: 600;
 	font-family: inherit;
-	background-color: var(--bg-primary);
+	background-color: var(--bg-secondary);
+	color: var(--text-primary);
 	cursor: pointer;
-	transition: border-color 0.25s;
+	transition: border-color var(--dur-fast) var(--ease-out),
+		background-color var(--dur-fast) var(--ease-out),
+		transform var(--dur-fast) var(--ease-out),
+		box-shadow var(--dur-fast) var(--ease-out);
 }
 button:focus,
 button:focus-visible {
-	outline: 4px auto var(--accent-focus);
+	outline: 3px solid var(--accent-focus);
 	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
 }
