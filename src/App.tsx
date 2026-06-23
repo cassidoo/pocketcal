@@ -104,7 +104,7 @@ function App() {
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					Edit on PocketCal
+					Edit on <span className="embed-wordmark">PocketCal</span>
 				</a>
 			</div>
 		);
