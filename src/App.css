@@ -63,12 +63,65 @@
 .app-container.embed-mode {
 	flex-direction: column;
 	position: relative;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.embed-frame {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	border: 1px solid var(--border-light);
+	border-radius: var(--radius-xl);
+	background-color: var(--bg-secondary);
+	box-shadow: var(--shadow-sm);
+	overflow: hidden;
+}
+
+.embed-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--border-light);
+	background-color: var(--bg-secondary);
+}
+
+.embed-legend-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	max-width: 100%;
+	padding: 5px 10px;
+	border: 1px solid var(--border-secondary);
+	border-radius: var(--radius-pill);
+	background-color: var(--bg-tertiary);
+}
+
+.embed-legend-color {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.embed-legend-label {
+	font-size: 0.83rem;
+	font-weight: 600;
+	color: var(--text-primary);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .app-container.embed-mode .calendar-container {
 	cursor: default;
 	padding: 12px;
 	gap: 10px;
+	flex: 1;
+	min-height: 0;
 }
 
 .app-container.embed-mode .calendar-month {
@@ -130,4 +183,19 @@
 	font-family: var(--font-display);
 	font-weight: 700;
 	font-optical-sizing: auto;
+}
+
+@media (max-width: 530px) {
+	.app-container.embed-mode {
+		padding: 8px;
+	}
+
+	.embed-legend {
+		padding: 8px;
+		gap: 6px;
+	}
+
+	.embed-legend-item {
+		padding: 4px 8px;
+	}
 }
