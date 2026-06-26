@@ -97,7 +97,21 @@ function App() {
 		const editUrl = window.location.href.replace(/[?&]embed=true/, "");
 		return (
 			<div className="app-container embed-mode">
-				<Calendar />
+				<div className="embed-frame">
+					<section className="embed-legend" aria-label="Event group legend">
+						{eventGroups.map((group) => (
+							<div key={group.id} className="embed-legend-item">
+								<span
+									className="embed-legend-color"
+									style={{ backgroundColor: group.color }}
+									aria-hidden="true"
+								/>
+								<span className="embed-legend-label">{group.name}</span>
+							</div>
+						))}
+					</section>
+					<Calendar />
+				</div>
 				<a
 					className="embed-edit-badge"
 					href={editUrl}
