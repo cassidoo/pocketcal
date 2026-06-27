@@ -208,6 +208,14 @@ h2 {
 	box-shadow: 0 0 0 2px var(--accent-border), var(--shadow-md);
 }
 
+.event-group-item.hidden {
+	opacity: 0.6;
+}
+
+.visibility-toggle.hidden svg {
+	opacity: 0.45;
+}
+
 .color-indicator {
 	display: inline-block;
 	width: 16px;

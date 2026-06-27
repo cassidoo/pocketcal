@@ -406,19 +406,25 @@ const Calendar: React.FC = () => {
 		return className;
 	};
 
-	const getRangeStyles = (dateStr: string): React.CSSProperties[] => {
-		const groupsWithDate = groupsByDate.get(dateStr);
-		if (!groupsWithDate) return [];
+	const getRangeStyles = (date: Date): React.CSSProperties[] => {
+		const styles: React.CSSProperties[] = [];
+		const visibleGroups = eventGroups.filter(
+			(group) => group.isVisible !== false && isDateInRange(date, group)
+		);
 
-		const totalGroups = groupsWithDate.length;
-		return groupsWithDate.map((group, index) => ({
-			backgroundColor: group.color,
-			position: "absolute",
-			left: 0,
-			right: 0,
-			top: `${(index / totalGroups) * 100}%`,
-			height: `${100 / totalGroups}%`,
-		}));
+		const totalGroups = visibleGroups.length;
+		visibleGroups.forEach((group, index) => {
+			styles.push({
+				backgroundColor: group.color,
+				position: "absolute",
+				left: 0,
+				right: 0,
+				top: `${(index / totalGroups) * 100}%`,
+				height: `${100 / totalGroups}%`,
+			});
+		});
+
+		return styles;
 	};
 
 	return (
