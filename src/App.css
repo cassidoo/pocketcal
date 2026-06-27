@@ -35,13 +35,18 @@
 	top: 16px;
 	right: 16px;
 	z-index: 200;
-	padding: 8px 8px 4px;
-	border-radius: 50%;
-	background: var(--bg-primary);
-	border: 1px solid var(--border-primary);
-	cursor: pointer;
+	width: 44px;
+	height: 44px;
+	padding: 0;
 	display: none;
-	transition: transform 0.3s ease;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: var(--bg-secondary);
+	border: 1px solid var(--border-primary);
+	box-shadow: var(--shadow-md);
+	cursor: pointer;
+	transition: transform 0.3s var(--ease-out);
 }
 
 .sidebar-hidden .sidebar-toggle {
@@ -50,47 +55,147 @@
 
 @media (max-width: 768px) {
 	.sidebar-toggle {
-		display: block;
+		display: flex;
 	}
 }
 
-.calendar-container {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-/* Embed mode */
+/* Embed mode: a restraint pass — tighter, calmer, smaller chrome in iframes. */
 .app-container.embed-mode {
 	flex-direction: column;
 	position: relative;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+.embed-frame {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	border: 1px solid var(--border-light);
+	border-radius: var(--radius-xl);
+	background-color: var(--bg-secondary);
+	box-shadow: var(--shadow-sm);
+	overflow: hidden;
+}
+
+.embed-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--border-light);
+	background-color: var(--bg-secondary);
+}
+
+.embed-legend-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	max-width: 100%;
+	padding: 5px 10px;
+	border: 1px solid var(--border-secondary);
+	border-radius: var(--radius-pill);
+	background-color: var(--bg-tertiary);
+}
+
+.embed-legend-color {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.embed-legend-label {
+	font-size: 0.83rem;
+	font-weight: 600;
+	color: var(--text-primary);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .app-container.embed-mode .calendar-container {
 	cursor: default;
+	padding: 12px;
+	gap: 10px;
+	flex: 1;
+	min-height: 0;
+}
+
+.app-container.embed-mode .calendar-month {
+	box-shadow: var(--shadow-sm);
 }
 
 .app-container.embed-mode .calendar-day {
 	cursor: default;
 }
 
+.app-container.embed-mode .calendar-day:active {
+	transform: none;
+}
+
+/* Embed is read-only — suppress hover affordances that imply interactivity. */
+.app-container.embed-mode .calendar-month:hover {
+	box-shadow: var(--shadow-sm);
+}
+
+.app-container.embed-mode .calendar-day:hover {
+	background-color: var(--bg-weekday);
+}
+
+.app-container.embed-mode .calendar-day.empty:hover {
+	background-color: transparent;
+}
+
+/* Embed is read-only — no selection, so no selected-group ring or boost. */
+.app-container.embed-mode .calendar-day.in-selected-group {
+	box-shadow: none;
+	animation: none;
+}
+
 .embed-edit-badge {
 	position: fixed;
-	bottom: 8px;
+	bottom: 10px;
 	right: 12px;
 	background-color: var(--accent);
-	color: white;
-	padding: 4px 12px;
-	border-radius: 4px;
+	color: var(--accent-contrast);
+	padding: 5px 12px;
+	border-radius: var(--radius-md);
 	font-size: 12px;
-	font-weight: 500;
+	font-weight: 600;
 	text-decoration: none;
-	opacity: 0.85;
-	transition: opacity 0.2s;
+	opacity: 0.9;
+	box-shadow: var(--shadow-accent);
+	transition: opacity var(--dur-fast) var(--ease-out),
+		transform var(--dur-fast) var(--ease-out);
 	z-index: 100;
 }
 
 .embed-edit-badge:hover {
 	opacity: 1;
-	color: white;
+	transform: translateY(-1px);
+	color: var(--accent-contrast);
+}
+
+.embed-wordmark {
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-optical-sizing: auto;
+}
+
+@media (max-width: 530px) {
+	.app-container.embed-mode {
+		padding: 8px;
+	}
+
+	.embed-legend {
+		padding: 8px;
+		gap: 6px;
+	}
+
+	.embed-legend-item {
+		padding: 4px 8px;
+	}
 }

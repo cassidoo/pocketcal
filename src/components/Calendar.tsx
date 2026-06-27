@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import {
 	useStore,
 	getCalendarDates,
-	isDateInRange,
 	checkSameDay,
 	DateRange,
+	EventGroup,
 	findRangeForDate,
 } from "../store";
 import {
@@ -21,6 +21,7 @@ import {
 	parseISO,
 	subDays,
 	addDays,
+	eachDayOfInterval,
 } from "date-fns";
 import "./Calendar.css";
 
@@ -37,15 +38,87 @@ const Calendar: React.FC = () => {
 		isEmbedMode,
 	} = useStore();
 
-	const calendarDates = getCalendarDates(startDate);
-	const today = startOfDay(new Date());
+	const calendarDates = useMemo(
+		() => getCalendarDates(startDate),
+		[startDate]
+	);
+	const today = useMemo(() => startOfDay(new Date()), []);
+
+	// Precompute which groups cover each date so per-cell rendering (and every
+	// drag mousemove re-render) is a cheap Map lookup instead of re-parsing
+	// every range for all 365 cells.
+	const groupsByDate = useMemo(() => {
+		const map = new Map<string, EventGroup[]>();
+		eventGroups.forEach((group) => {
+			group.ranges.forEach((range) => {
+				const start = parseISO(range.start);
+				const end = parseISO(range.end);
+				if (isAfter(start, end)) return;
+				eachDayOfInterval({ start, end }).forEach((day) => {
+					const key = formatISO(day, { representation: "date" });
+					const existing = map.get(key);
+					if (existing) {
+						if (!existing.includes(group)) existing.push(group);
+					} else {
+						map.set(key, [group]);
+					}
+				});
+			});
+		});
+		return map;
+	}, [eventGroups]);
 
 	const [isDragging, setIsDragging] = useState(false);
 	const [dragStartDate, setDragStartDate] = useState<Date | null>(null);
 	const [dragEndDate, setDragEndDate] = useState<Date | null>(null);
 	const [focusedDate, setFocusedDate] = useState<Date | null>(null);
 	const [isContainerFocused, setIsContainerFocused] = useState(false);
+	// Track input modality so the date focus ring shows for keyboard users only
+	// (focus-visible semantics), not as a lingering outline after a mouse click.
+	const [usingKeyboard, setUsingKeyboard] = useState(false);
+	// Bumps on each user-driven group selection to retrigger the "boost" pulse;
+	// stays 0 on initial mount so there's no page-load choreography.
+	const [boostKey, setBoostKey] = useState(0);
+	const prevSelectedRef = useRef<string | null>(selectedGroupId);
 	const calendarGridRef = useRef<HTMLDivElement>(null);
+
+	const selectedGroup = useMemo(
+		() => eventGroups.find((group) => group.id === selectedGroupId) ?? null,
+		[eventGroups, selectedGroupId]
+	);
+
+	useEffect(() => {
+		const keyboardKeys = new Set([
+			"Tab",
+			"ArrowUp",
+			"ArrowDown",
+			"ArrowLeft",
+			"ArrowRight",
+			" ",
+			"Enter",
+			"Home",
+			"End",
+			"PageUp",
+			"PageDown",
+		]);
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (keyboardKeys.has(e.key)) setUsingKeyboard(true);
+		};
+		const onPointerDown = () => setUsingKeyboard(false);
+		window.addEventListener("keydown", onKeyDown, true);
+		window.addEventListener("pointerdown", onPointerDown, true);
+		return () => {
+			window.removeEventListener("keydown", onKeyDown, true);
+			window.removeEventListener("pointerdown", onPointerDown, true);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (prevSelectedRef.current !== selectedGroupId) {
+			prevSelectedRef.current = selectedGroupId;
+			setBoostKey((key) => key + 1);
+		}
+	}, [selectedGroupId]);
 
 	// Focus management
 	useEffect(() => {
@@ -69,7 +142,8 @@ const Calendar: React.FC = () => {
 		}
 	};
 
-	const handleContainerBlur = () => {
+	const handleContainerBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+		if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
 		setIsContainerFocused(false);
 	};
 
@@ -280,17 +354,21 @@ const Calendar: React.FC = () => {
 		}
 	};
 
-	const groupedDates = calendarDates.reduce((acc, date) => {
-		if (!includeWeekends && isWeekend(date)) {
-			return acc;
-		}
-		const key = getMonthYearKey(date);
-		if (!acc[key]) {
-			acc[key] = [];
-		}
-		acc[key].push(date);
-		return acc;
-	}, {} as { [key: string]: Date[] });
+	const groupedDates = useMemo(
+		() =>
+			calendarDates.reduce((acc, date) => {
+				if (!includeWeekends && isWeekend(date)) {
+					return acc;
+				}
+				const key = getMonthYearKey(date);
+				if (!acc[key]) {
+					acc[key] = [];
+				}
+				acc[key].push(date);
+				return acc;
+			}, {} as { [key: string]: Date[] }),
+		[calendarDates, includeWeekends]
+	);
 
 	const getDayClassName = (date: Date): string => {
 		let className = "calendar-day";
@@ -303,7 +381,12 @@ const Calendar: React.FC = () => {
 			className += " weekend-hidden";
 		}
 
-		if (focusedDate && checkSameDay(date, focusedDate)) {
+		if (
+			usingKeyboard &&
+			isContainerFocused &&
+			focusedDate &&
+			checkSameDay(date, focusedDate)
+		) {
 			className += " focused";
 		}
 
@@ -397,13 +480,31 @@ const Calendar: React.FC = () => {
 
 							{datesInMonth.map((date) => {
 								const dateStr = formatISO(date, { representation: "date" });
-								const isSelected = eventGroups.some((group) =>
-									isDateInRange(date, group)
+								const dayGroups = groupsByDate.get(dateStr);
+								const isSelected = dayGroups !== undefined;
+								const inSelectedGroup = !!(
+									selectedGroupId &&
+									dayGroups?.some((group) => group.id === selectedGroupId)
 								);
+								let dayClassName = getDayClassName(date);
+								if (inSelectedGroup) {
+									dayClassName += " in-selected-group";
+									if (boostKey > 0) {
+										dayClassName +=
+											boostKey % 2 === 1 ? " boost-b" : " boost-a";
+									}
+								}
 								return (
 									<div
 										key={dateStr}
-										className={getDayClassName(date)}
+										className={dayClassName}
+										style={
+											inSelectedGroup && selectedGroup
+												? ({
+														"--sel-color": selectedGroup.color,
+												  } as React.CSSProperties)
+												: undefined
+										}
 										onMouseDown={() => handleMouseDown(date)}
 										onMouseEnter={() => handleMouseMove(date)}
 										data-date={dateStr}
@@ -418,7 +519,7 @@ const Calendar: React.FC = () => {
 											{getDate(date)}
 										</span>
 										<div className="range-indicators" aria-hidden="true">
-											{getRangeStyles(date).map((style, index) => (
+											{getRangeStyles(dateStr).map((style, index) => (
 												<div
 													key={`range-${index}`}
 													className="range-indicator"

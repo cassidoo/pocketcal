@@ -1,9 +1,9 @@
 .calendar-container {
 	flex: 1;
-	padding: 10px;
+	padding: 22px;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: 10px;
+	grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+	gap: 18px;
 	align-content: start;
 	background-color: var(--bg-primary);
 	overflow-y: auto;
@@ -14,7 +14,8 @@
 
 @media (max-width: 768px) {
 	.calendar-container {
-		padding: 10px;
+		padding: 14px;
+		gap: 14px;
 	}
 }
 
@@ -27,28 +28,36 @@
 
 .calendar-month {
 	border: 1px solid var(--border-light);
-	padding: 8px;
-	border-radius: 6px;
+	padding: 14px 14px 16px;
+	border-radius: var(--radius-lg);
 	background-color: var(--bg-card);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: var(--shadow-sm);
 	min-width: 0;
+	transition: box-shadow var(--dur-mid) var(--ease-out),
+		transform var(--dur-mid) var(--ease-out);
+}
+
+.calendar-month:hover {
+	box-shadow: var(--shadow-md);
 }
 
 .calendar-month h3 {
 	text-align: center;
-	margin: 0 0 8px 0;
-	color: var(--text-primary);
-	font-size: 0.9em;
+	margin: 0 0 12px 0;
+	color: var(--accent-strong);
+	font-family: var(--font-display);
+	font-size: 1.12rem;
 	font-weight: 600;
+	letter-spacing: -0.01em;
 }
 
 .calendar-grid {
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
-	gap: 1px;
-	background-color: var(--bg-grid);
-	padding: 1px;
-	border-radius: 4px;
+	gap: 4px;
+	background-color: transparent;
+	padding: 0;
+	border-radius: var(--radius-sm);
 	font-size: 0.8em;
 }
 
@@ -58,35 +67,48 @@
 
 .weekday-header {
 	text-align: center;
-	font-weight: 600;
-	font-size: 0.7em;
-	padding: 2px;
-	background-color: var(--bg-weekday);
+	font-weight: 700;
+	font-size: 0.66rem;
+	letter-spacing: 0.02em;
+	padding: 2px 0 6px;
+	background-color: transparent;
 	color: var(--text-secondary);
 }
 
 .calendar-day {
-	background-color: var(--bg-secondary);
+	background-color: var(--bg-weekday);
 	border: 1px solid transparent;
-	min-height: 24px;
-	height: 24px;
-	padding: 2px;
+	aspect-ratio: 1 / 1;
+	min-width: 0;
+	min-height: 0;
+	padding: 0;
 	position: relative;
 	cursor: pointer;
 	user-select: none;
-	transition: background-color 0.5s ease;
+	border-radius: var(--radius-sm);
+	transition: background-color var(--dur-fast) var(--ease-out),
+		box-shadow var(--dur-fast) var(--ease-out),
+		transform var(--dur-fast) var(--ease-out);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
 .calendar-day:hover {
-	background-color: var(--bg-weekday);
+	background-color: var(--bg-active);
+}
+
+.calendar-day:active {
+	transform: scale(0.9);
 }
 
 .calendar-day.empty {
 	background-color: transparent;
 	cursor: default;
+}
+
+.calendar-day.empty:active {
+	transform: none;
 }
 
 .calendar-day.weekend-hidden {
@@ -95,22 +117,23 @@
 
 .calendar-day.today .day-number {
 	color: var(--text-primary);
-	font-weight: bold;
+	font-weight: 700;
 	border: 2px solid var(--today-border);
 	border-radius: 50%;
 	box-sizing: border-box;
-	width: 20px;
-	height: 20px;
-	padding: 11px;
+	width: 24px;
+	height: 24px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--today-border) 22%, transparent);
 }
 
 .calendar-day:has(.range-indicator).today .day-number {
 	color: var(--today-text-on-range);
 	background-color: var(--today-bg-on-range);
-	border-color: transparent;
+	border-color: var(--today-bg-on-range);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 	text-shadow: none;
 }
 
@@ -120,38 +143,45 @@
 }
 
 .day-number {
-	font-size: 0.9em;
+	font-size: 0.92em;
 	color: var(--text-primary);
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: relative;
 	z-index: 2;
-	transition: font-weight 0.5s ease;
+	border-radius: 50%;
+	transition: font-weight var(--dur-fast) var(--ease-out);
 }
 
-/* When the calendar day has range indicators, make the number white and bold */
+/*
+ * On a colored range, give the number a dark circular backplate so it stays
+ * legible on every group color (incl. light yellow/green) and in both themes.
+ */
 .calendar-day:has(.range-indicator) .day-number {
 	color: var(--day-text-on-range);
-	font-weight: bold;
-	text-shadow: 0 1px 2px var(--day-shadow-on-range);
+	font-weight: 700;
+	background-color: rgba(26, 14, 48, 0.2);
+	text-shadow: 0 1px 1px var(--day-shadow-on-range);
 }
 
+/* Range fills clipped to a soft "sticker" so corners read playful, not noisy. */
 .range-indicators {
 	position: absolute;
-	inset: 0;
+	inset: 2px;
 	pointer-events: none;
 	z-index: 1;
+	border-radius: var(--radius-xs);
+	overflow: hidden;
 }
 
 .range-indicator {
 	position: absolute;
 	left: 0;
 	right: 0;
-	border-radius: 2px;
-	transition: opacity 0.5s ease;
+	transition: opacity var(--dur-fast) var(--ease-out);
 }
 
 .range-indicator:hover {
@@ -159,16 +189,76 @@
 }
 
 .calendar-container:focus {
-	outline: 2px solid var(--accent-outline);
-	outline-offset: 2px;
-}
-
-.calendar-container:focus:not(:focus-visible) {
 	outline: none;
 }
 
+.calendar-container:focus-visible {
+	outline: 3px solid var(--accent-outline);
+	outline-offset: -3px;
+	border-radius: var(--radius-md);
+}
+
 .calendar-day.focused {
-	outline: 2px solid var(--accent-outline-strong);
-	outline-offset: -2px;
+	outline: 3px solid var(--accent-outline-strong);
+	outline-offset: 2px;
 	z-index: 3;
+}
+
+/*
+ * The dates of the currently-selected group get a ring in that group's own
+ * color, tying the sidebar group to its days on the calendar. The 2px gutter
+ * already between the sticker fill and the cell edge separates ring from fill.
+ */
+.calendar-day.in-selected-group {
+	box-shadow: 0 0 0 2px var(--sel-color);
+	z-index: 2;
+}
+
+/* Keyboard focus must always win over the selected-group ring. */
+.calendar-day.in-selected-group.focused {
+	z-index: 3;
+}
+
+/*
+ * Boost: when a group is selected, its days pulse once. Two identical
+ * keyframes (a/b) let us retrigger the animation on every selection change by
+ * swapping the class, even for days shared between the old and new group.
+ */
+@keyframes group-boost-a {
+	0% {
+		transform: scale(1);
+	}
+	40% {
+		transform: scale(1.12);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes group-boost-b {
+	0% {
+		transform: scale(1);
+	}
+	40% {
+		transform: scale(1.12);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.calendar-day.boost-a {
+	animation: group-boost-a 0.42s var(--ease-out);
+}
+
+.calendar-day.boost-b {
+	animation: group-boost-b 0.42s var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.calendar-day.boost-a,
+	.calendar-day.boost-b {
+		animation: none;
+	}
 }
