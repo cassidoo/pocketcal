@@ -10,17 +10,24 @@
 	color: var(--text-primary);
 	overflow-y: auto;
 	overflow-x: hidden;
-	transition: max-height 0.3s ease;
+	transition:
+		max-height 0.3s ease,
+		width 0.3s var(--ease-out),
+		min-width 0.3s var(--ease-out),
+		padding 0.3s var(--ease-out),
+		opacity 0.3s var(--ease-out);
 	box-sizing: border-box;
 }
 
 .sidebar h1 {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	font-family: var(--font-display);
 	font-size: 2rem;
 	font-weight: 500;
 	letter-spacing: -0.01em;
+	line-height: 32px;
 	color: var(--text-heading);
 	margin: 0;
 	padding: 0 0 4px;
@@ -118,7 +125,8 @@ h2 {
 	gap: 9px;
 	min-height: 34px;
 	box-shadow: var(--shadow-sm);
-	transition: transform var(--dur-fast) var(--ease-out),
+	transition:
+		transform var(--dur-fast) var(--ease-out),
 		box-shadow var(--dur-fast) var(--ease-out),
 		border-color var(--dur-fast) var(--ease-out),
 		background-color var(--dur-fast) var(--ease-out);
@@ -143,10 +151,7 @@ h2 {
 	border: none !important;
 	border-radius: var(--radius-xs);
 	background-color: transparent !important;
-	background-image: radial-gradient(
-		currentColor 1.4px,
-		transparent 1.4px
-	);
+	background-image: radial-gradient(currentColor 1.4px, transparent 1.4px);
 	background-size: 6px 6px;
 	background-position: center;
 	color: var(--text-secondary);
@@ -201,11 +206,15 @@ h2 {
 .event-group-item.selected {
 	background-color: var(--accent-soft);
 	border-color: var(--accent-border);
-	box-shadow: 0 0 0 2px var(--accent-border), var(--shadow-sm);
+	box-shadow:
+		0 0 0 2px var(--accent-border),
+		var(--shadow-sm);
 }
 
 .event-group-item.selected:hover {
-	box-shadow: 0 0 0 2px var(--accent-border), var(--shadow-md);
+	box-shadow:
+		0 0 0 2px var(--accent-border),
+		var(--shadow-md);
 }
 
 .color-indicator {
@@ -215,7 +224,8 @@ h2 {
 	border-radius: 50%;
 	margin-right: 4px;
 	border: 2px solid var(--bg-secondary);
-	box-shadow: 0 0 0 1.5px color-mix(in srgb, currentColor 25%, transparent),
+	box-shadow:
+		0 0 0 1.5px color-mix(in srgb, currentColor 25%, transparent),
 		var(--shadow-sm);
 	flex-shrink: 0;
 }
@@ -283,7 +293,8 @@ select {
 	font-family: inherit;
 	font-size: 0.92rem;
 	padding: 7px 10px;
-	transition: border-color var(--dur-fast) var(--ease-out),
+	transition:
+		border-color var(--dur-fast) var(--ease-out),
 		box-shadow var(--dur-fast) var(--ease-out);
 }
 

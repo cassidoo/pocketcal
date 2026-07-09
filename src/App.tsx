@@ -80,8 +80,9 @@ function App() {
 
 	const toggleSidebar = () => {
 		const sidebar = document.querySelector(".sidebar");
+		const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
-		if (!isSidebarHidden && sidebar) {
+		if (!isSidebarHidden && sidebar && isMobile) {
 			sidebar.scrollTop = 0;
 			sidebar.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -89,7 +90,7 @@ function App() {
 				setIsSidebarHidden(true);
 			}, 300);
 		} else {
-			setIsSidebarHidden(false);
+			setIsSidebarHidden(!isSidebarHidden);
 		}
 	};
 

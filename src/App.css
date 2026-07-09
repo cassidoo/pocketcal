@@ -18,6 +18,19 @@
 	background-color: var(--bg-primary);
 }
 
+/* Desktop collapse: slide the sidebar off-screen and let the calendar fill the space. */
+.app-container.sidebar-hidden .sidebar {
+	min-width: 0;
+	width: 0;
+	padding-left: 0;
+	padding-right: 0;
+	border-right-width: 0;
+	opacity: 0;
+	overflow: hidden;
+	pointer-events: none;
+	visibility: hidden;
+}
+
 /* Responsive layout */
 @media (max-width: 768px) {
 	.app-container {
@@ -25,20 +38,28 @@
 	}
 
 	.app-container.sidebar-hidden .sidebar {
+		min-width: 0;
+		width: 100%;
 		max-height: 80px;
+		padding-left: 20px;
+		padding-right: 20px;
+		border-right-width: 0;
+		opacity: 1;
 		overflow: hidden;
+		pointer-events: auto;
+		visibility: visible;
 	}
 }
 
 .sidebar-toggle {
 	position: fixed;
-	top: 16px;
-	right: 16px;
+	top: 20px;
+	left: 20px;
 	z-index: 200;
-	width: 44px;
-	height: 44px;
+	width: 35px;
+	height: 35px;
 	padding: 0;
-	display: none;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 	border-radius: 50%;
@@ -50,13 +71,7 @@
 }
 
 .sidebar-hidden .sidebar-toggle {
-	transform: rotate(90deg);
-}
-
-@media (max-width: 768px) {
-	.sidebar-toggle {
-		display: flex;
-	}
+	transform: rotate(-90deg);
 }
 
 /* Embed mode: a restraint pass — tighter, calmer, smaller chrome in iframes. */
@@ -168,7 +183,8 @@
 	text-decoration: none;
 	opacity: 0.9;
 	box-shadow: var(--shadow-accent);
-	transition: opacity var(--dur-fast) var(--ease-out),
+	transition:
+		opacity var(--dur-fast) var(--ease-out),
 		transform var(--dur-fast) var(--ease-out);
 	z-index: 100;
 }
