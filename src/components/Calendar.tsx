@@ -76,10 +76,6 @@ const Calendar: React.FC = () => {
 	// Track input modality so the date focus ring shows for keyboard users only
 	// (focus-visible semantics), not as a lingering outline after a mouse click.
 	const [usingKeyboard, setUsingKeyboard] = useState(false);
-	// Bumps on each user-driven group selection to retrigger the "boost" pulse;
-	// stays 0 on initial mount so there's no page-load choreography.
-	const [boostKey, setBoostKey] = useState(0);
-	const prevSelectedRef = useRef<string | null>(selectedGroupId);
 	const calendarGridRef = useRef<HTMLDivElement>(null);
 
 	const selectedGroup = useMemo(
@@ -112,13 +108,6 @@ const Calendar: React.FC = () => {
 			window.removeEventListener("pointerdown", onPointerDown, true);
 		};
 	}, []);
-
-	useEffect(() => {
-		if (prevSelectedRef.current !== selectedGroupId) {
-			prevSelectedRef.current = selectedGroupId;
-			setBoostKey((key) => key + 1);
-		}
-	}, [selectedGroupId]);
 
 	// Focus management
 	useEffect(() => {
@@ -483,10 +472,6 @@ const Calendar: React.FC = () => {
 								let dayClassName = getDayClassName(date);
 								if (inSelectedGroup) {
 									dayClassName += " in-selected-group";
-									if (boostKey > 0) {
-										dayClassName +=
-											boostKey % 2 === 1 ? " boost-b" : " boost-a";
-									}
 								}
 								return (
 									<div

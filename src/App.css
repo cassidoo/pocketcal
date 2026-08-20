@@ -164,10 +164,9 @@
 	background-color: transparent;
 }
 
-/* Embed is read-only — no selection, so no selected-group ring or boost. */
+/* Embed is read-only — no selection, so no selected-group ring. */
 .app-container.embed-mode .calendar-day.in-selected-group {
 	box-shadow: none;
-	animation: none;
 }
 
 .embed-edit-badge {
