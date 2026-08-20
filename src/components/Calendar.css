@@ -33,8 +33,6 @@
 	background-color: var(--bg-card);
 	box-shadow: var(--shadow-sm);
 	min-width: 0;
-	transition: box-shadow var(--dur-mid) var(--ease-out),
-		transform var(--dur-mid) var(--ease-out);
 }
 
 .calendar-month:hover {
@@ -86,9 +84,6 @@
 	cursor: pointer;
 	user-select: none;
 	border-radius: var(--radius-sm);
-	transition: background-color var(--dur-fast) var(--ease-out),
-		box-shadow var(--dur-fast) var(--ease-out),
-		transform var(--dur-fast) var(--ease-out);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -153,7 +148,6 @@
 	position: relative;
 	z-index: 2;
 	border-radius: 50%;
-	transition: font-weight var(--dur-fast) var(--ease-out);
 }
 
 /*
@@ -181,7 +175,6 @@
 	position: absolute;
 	left: 0;
 	right: 0;
-	transition: opacity var(--dur-fast) var(--ease-out);
 }
 
 .range-indicator:hover {
@@ -217,48 +210,4 @@
 /* Keyboard focus must always win over the selected-group ring. */
 .calendar-day.in-selected-group.focused {
 	z-index: 3;
-}
-
-/*
- * Boost: when a group is selected, its days pulse once. Two identical
- * keyframes (a/b) let us retrigger the animation on every selection change by
- * swapping the class, even for days shared between the old and new group.
- */
-@keyframes group-boost-a {
-	0% {
-		transform: scale(1);
-	}
-	40% {
-		transform: scale(1.12);
-	}
-	100% {
-		transform: scale(1);
-	}
-}
-
-@keyframes group-boost-b {
-	0% {
-		transform: scale(1);
-	}
-	40% {
-		transform: scale(1.12);
-	}
-	100% {
-		transform: scale(1);
-	}
-}
-
-.calendar-day.boost-a {
-	animation: group-boost-a 0.42s var(--ease-out);
-}
-
-.calendar-day.boost-b {
-	animation: group-boost-b 0.42s var(--ease-out);
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.calendar-day.boost-a,
-	.calendar-day.boost-b {
-		animation: none;
-	}
 }
